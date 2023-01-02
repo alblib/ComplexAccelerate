@@ -301,6 +301,9 @@ extension ComplexAccelerate{
     public static func tanh(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
         divide(subtract(exp(complexVector), exp(negative(complexVector))), add(exp(complexVector), exp(negative(complexVector))))
     }
+    public static func coth(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
+        divide(add(exp(complexVector), exp(negative(complexVector))), subtract(exp(complexVector), exp(negative(complexVector))))
+    }
     public static func cos(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex] {
         let splited = split(complexVector)
         let ITimes = complexify(reals: vDSP.negative(splited.imag), imaginaries: splited.real)
@@ -318,6 +321,13 @@ extension ComplexAccelerate{
         let ITimes = complexify(reals: vDSP.negative(splited.imag), imaginaries: splited.real)
         let tanhSplit = split(tanh(ITimes))
         return complexify(reals: tanhSplit.imag, imaginaries: vDSP.negative(tanhSplit.real))
+    }
+    public static func cot(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex] {
+        // icoth(iz)
+        let splited = split(complexVector)
+        let ITimes = complexify(reals: vDSP.negative(splited.imag), imaginaries: splited.real)
+        let cothSplit = split(coth(ITimes))
+        return complexify(reals: vDSP.negative(cothSplit.imag), imaginaries: cothSplit.real)
     }
 }
 
