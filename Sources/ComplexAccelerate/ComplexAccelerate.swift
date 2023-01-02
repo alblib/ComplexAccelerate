@@ -5,3 +5,7 @@ public struct ComplexAccelerate {
     public init() {
     }
 }*/
+
+public enum ComplexAccelerate{
+    
+}

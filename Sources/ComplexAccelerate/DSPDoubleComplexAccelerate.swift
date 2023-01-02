@@ -10,8 +10,14 @@ import Accelerate
 
 
 
-public enum ComplexAccelerate{
+extension ComplexAccelerate{
     
+    /// Splits an array of complex numbers into the array of the real components and the array of the imaginary components.
+    ///
+    /// - Note: This function is a wrapper of `vDSP_ctozD` function in `Accelerate` framework.
+    /// - Parameter complexVector: The array of complex numbers in form of structure `DSPDoubleComplex`.
+    /// - Returns: The pair `(real: [Double], imag: [Double])` of the array of real parts and the array of imaginary parts, which can be dereferenced by calling the member `.real` and `.imag`.
+    /// - Remark: No exception guaranteed.
     public static func split(_ complexVector: [DSPDoubleComplex]) -> (real: [Double], imag: [Double]){
         let count = complexVector.count
         var real: [Double] = []
@@ -26,6 +32,14 @@ public enum ComplexAccelerate{
         })
         return (real: real, imag: imag)
     }
+    
+    /// Combine an array of real parts and an array of imaginary parts to make the array of complex numbers.
+    /// - Parameters:
+    ///     - reals: The real parts of the complex numbers in order.
+    ///     - imaginaries: The imaginary parts of the complex numbers in order.
+    /// - Returns: The array of `DSPDoubleComplex` combining the array of the real parts and the array of the imaginary parts.
+    /// - Note: This function is a wrapper of `vDSP_ztocD` function in `Accelerate` framework.
+    /// - Remark: No exception guaranteed. The output array size is confined to the smaller one from the two inputs.
     public static func complexify(reals: [Double], imaginaries: [Double]) -> [DSPDoubleComplex]{
         let count = min(reals.count, imaginaries.count)
         return [DSPDoubleComplex](unsafeUninitializedCapacity: count) { buffer, initializedCount in
@@ -39,6 +53,7 @@ public enum ComplexAccelerate{
         }
     }
     
+    /// Returns a negated array from an array of complex numbers.
     public static func negative(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex] {
         let count = complexVector.count
         return [DSPDoubleComplex](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
@@ -54,6 +69,7 @@ public enum ComplexAccelerate{
         }
     }
     
+    /// Returns the real array of absolute values of each of the given complex array.
     public static func absolute(_ complexVector: [DSPDoubleComplex]) -> [Double] {
         let count = complexVector.count
         return [Double](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
