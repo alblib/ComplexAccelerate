@@ -53,6 +53,27 @@ extension ComplexAccelerate{
         }
     }
     
+    public static func conjugate(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex] {
+        let count = complexVector.count
+        return [DSPDoubleComplex](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
+            outputBuffer.withMemoryRebound(to: Double.self) { outputDoubleBuffer in
+                var outputSplitComplex =
+                    DSPDoubleSplitComplex(realp: outputDoubleBuffer.baseAddress!,
+                                          imagp: outputDoubleBuffer.baseAddress! + 1)
+                complexVector.withUnsafeBufferPointer { inputBuffer in
+                    inputBuffer.withMemoryRebound(to: Double.self) { inputDoubleBuffer in
+                        var inputSplitComplex =
+                            DSPDoubleSplitComplex(
+                                realp: UnsafeMutablePointer<Double>(mutating: inputDoubleBuffer.baseAddress!),
+                                imagp: UnsafeMutablePointer<Double>(mutating: inputDoubleBuffer.baseAddress! + 1))
+                        vDSP_zvconjD(&inputSplitComplex, 2, &outputSplitComplex, 2, vDSP_Length(count))
+                    }
+                }
+            }
+            initializedCount = count
+        }
+    }
+    
     /// Returns a negated array from an array of complex numbers.
     public static func negative(_ complexVector: [DSPDoubleComplex]) -> [DSPDoubleComplex] {
         let count = complexVector.count

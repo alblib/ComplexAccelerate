@@ -6,6 +6,7 @@ public struct ComplexAccelerate {
     }
 }*/
 
+/// The namespace for the parallel operations for complex numbers (`DSPComplex` and `DSPDoubleComplex`) .
 public enum ComplexAccelerate{
     
 }
