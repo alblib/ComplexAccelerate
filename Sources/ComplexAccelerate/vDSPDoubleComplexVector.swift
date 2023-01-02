@@ -129,8 +129,10 @@ extension vDSPDoubleComplexVector{
     }
 }
 
+// MARK: - Wrapper Basic Components
+
 extension vDSPDoubleComplexVector{
-    static func vDSP_wrapper_output(count: Int, wrapping: @escaping (_ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()) -> [DSPDoubleComplex]{
+    static func vDSP_wrapper_output(count: Int, wrapping: (_ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()) -> [DSPDoubleComplex]{
         [DSPDoubleComplex](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
             outputBuffer.withMemoryRebound(to: Double.self) { outputDoubleBuffer in
                 var outputSplitComplex = DSPDoubleSplitComplex(realp: outputDoubleBuffer.baseAddress!, imagp: outputDoubleBuffer.baseAddress! + 1)
@@ -139,18 +141,16 @@ extension vDSPDoubleComplexVector{
             initializedCount = count
         }
     }
-    static func vDSP_wrapper_complexVectorInput(complexVector: [DSPDoubleComplex], wrapping: @escaping (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride) -> ()) {
-        complexVector.withUnsafeBufferPointer { inputBuffer in
-            inputBuffer.withMemoryRebound(to: Double.self) { inputDoubleBuffer in
-                var inputSplitComplex =
-                    DSPDoubleSplitComplex(
-                        realp: UnsafeMutablePointer(mutating: inputDoubleBuffer.baseAddress!),
-                        imagp: UnsafeMutablePointer(mutating: inputDoubleBuffer.baseAddress! + 1))
-                wrapping(&inputSplitComplex, 2)
-            }
+    static func vDSP_wrapper_complexVectorInput(complexVectorPtr: UnsafePointer<DSPDoubleComplex>, capacity: Int, wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride) -> ()) {
+        complexVectorPtr.withMemoryRebound(to: Double.self, capacity: 2 * capacity) { pointer in
+            var inputSplitComplex =
+                DSPDoubleSplitComplex(
+                    realp: UnsafeMutablePointer(mutating: pointer),
+                    imagp: UnsafeMutablePointer(mutating: pointer + 1))
+            wrapping(&inputSplitComplex, 2)
         }
     }
-    static func vDSP_wrapper_complexScalarInput(complexScalar: DSPDoubleComplex, wrapping: @escaping (_ A: UnsafePointer<DSPDoubleSplitComplex>) -> ()){
+    static func vDSP_wrapper_complexScalarInput(complexScalar: DSPDoubleComplex, wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>) -> ()){
         withUnsafePointer(to: complexScalar) { inputPointer in
             inputPointer.withMemoryRebound(to: Double.self, capacity: 2) { inputDoublePointer in
                 var inputSplitComplex =
@@ -162,57 +162,57 @@ extension vDSPDoubleComplexVector{
         }
     }
 }
+
+// MARK: - Wrapper Forms
+
+extension vDSPDoubleComplexVector{
+    static func vDSP_wrapperForm_zvzvzv(wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride, _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride, _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> () , complexVectorA: [DSPDoubleComplex], complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
+        vDSP_wrapper_output(count: min(complexVectorA.count, complexVectorB.count)) { Out, IOut, N in
+            vDSP_wrapper_complexVectorInput(complexVectorPtr: complexVectorA, capacity: complexVectorA.capacity) { A, IA in
+                vDSP_wrapper_complexVectorInput(complexVectorPtr: complexVectorB, capacity: complexVectorB.capacity) { B, IB in
+                    wrapping(A, IA, B, IB, Out, IOut, N)
+                }
+            }
+        }
+    }
+    static func vDSP_wrapperForm_zvzszv(wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride, _ B: UnsafePointer<DSPDoubleSplitComplex>, _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> () , complexVectorA: [DSPDoubleComplex], complexScalarB: DSPDoubleComplex) -> [DSPDoubleComplex]{
+        vDSP_wrapper_output(count: complexVectorA.count) { Out, IOut, N in
+            vDSP_wrapper_complexVectorInput(complexVectorPtr: complexVectorA, capacity: complexVectorA.capacity) { A, IA in
+                vDSP_wrapper_complexScalarInput(complexScalar: complexScalarB) { B in
+                    wrapping(A, IA, B, Out, IOut, N)
+                }
+            }
+        }
+    }
+}
+
     
 // MARK: - Arithmetics between two complex arrays
 
 extension vDSPDoubleComplexVector{
-    static func vDSP_wrapper_zvzvzv(wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride, _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride, _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> () , complexVectorA: [DSPDoubleComplex], complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-
-        let count = min(complexVectorA.count, complexVectorB.count)
-        return [DSPDoubleComplex](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
-            outputBuffer.withMemoryRebound(to: Double.self) { outputDoubleBuffer in
-                var outputSplitComplex = DSPDoubleSplitComplex(realp: outputDoubleBuffer.baseAddress!, imagp: outputDoubleBuffer.baseAddress! + 1)
-                
-                complexVectorB.withUnsafeBufferPointer { inputBBuffer in
-                    inputBBuffer.withMemoryRebound(to: Double.self) { inputBDoubleBuffer in
-                        var inputBSplitComplex = DSPDoubleSplitComplex(realp: UnsafeMutablePointer<Double>(mutating: inputBDoubleBuffer.baseAddress!), imagp: UnsafeMutablePointer<Double>(mutating: inputBDoubleBuffer.baseAddress! + 1))
-                        
-                        complexVectorA.withUnsafeBufferPointer { inputABuffer in
-                            inputABuffer.withMemoryRebound(to: Double.self) { inputADoubleBuffer in
-                                var inputASplitComplex = DSPDoubleSplitComplex(realp: UnsafeMutablePointer<Double>(mutating: inputADoubleBuffer.baseAddress!), imagp: UnsafeMutablePointer<Double>(mutating: inputADoubleBuffer.baseAddress! + 1))
-                                
-                                wrapping(&inputASplitComplex, 2, &inputBSplitComplex, 2, &outputSplitComplex, 2, vDSP_Length(count))
-                            }
-                        }
-                    }
-                }
-            }
-            initializedCount = count
-        }
-    }
     
     public static func add(_ complexVectorA: [DSPDoubleComplex], _ complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-        vDSP_wrapper_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
+        vDSP_wrapperForm_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
             vDSP_zvaddD(A, IA, B, IB, Out, IOut, N)
         }, complexVectorA: complexVectorA, complexVectorB: complexVectorB)
     }
     public static func subtract(_ complexVectorA: [DSPDoubleComplex], _ complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-        vDSP_wrapper_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
+        vDSP_wrapperForm_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
             vDSP_zvsubD(A, IA, B, IB, Out, IOut, N)
         }, complexVectorA: complexVectorA, complexVectorB: complexVectorB)
     }
     public static func multiply(_ complexVectorA: [DSPDoubleComplex], _ complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-        vDSP_wrapper_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
+        vDSP_wrapperForm_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
             vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, +1)
         }, complexVectorA: complexVectorA, complexVectorB: complexVectorB)
     }
     public static func multiply(conjugate complexVectorA: [DSPDoubleComplex], _ complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-        vDSP_wrapper_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
+        vDSP_wrapperForm_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
             vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, -1)
         }, complexVectorA: complexVectorA, complexVectorB: complexVectorB)
     }
     public static func divide(_ complexVectorA: [DSPDoubleComplex], _ complexVectorB: [DSPDoubleComplex]) -> [DSPDoubleComplex]{
-        vDSP_wrapper_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
+        vDSP_wrapperForm_zvzvzv(wrapping: { A, IA, B, IB, Out, IOut, N in
             vDSP_zvdivD(B, IB, A, IA, Out, IOut, N)
         }, complexVectorA: complexVectorA, complexVectorB: complexVectorB)
     }
@@ -221,39 +221,9 @@ extension vDSPDoubleComplexVector{
 // MARK: Arithmetics -- [z] * z -> [z]
 
 extension vDSPDoubleComplexVector{
-    static func vDSP_wrapper_zvzszv(wrapping: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride, _ B: UnsafePointer<DSPDoubleSplitComplex>, _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> () , complexVectorA: [DSPDoubleComplex], complexScalarB: DSPDoubleComplex) -> [DSPDoubleComplex]{
-        let count = complexVectorA.count
-        return [DSPDoubleComplex](unsafeUninitializedCapacity: count) { outputBuffer, initializedCount in
-            outputBuffer.withMemoryRebound(to: Double.self) { outputDoubleBuffer in
-                var outputSplitComplex = DSPDoubleSplitComplex(realp: outputDoubleBuffer.baseAddress!, imagp: outputDoubleBuffer.baseAddress! + 1)
-                
-                complexVectorA.withUnsafeBufferPointer { inputABuffer in
-                    inputABuffer.withMemoryRebound(to: Double.self) { inputADoubleBuffer in
-                        var inputASplitComplex =
-                            DSPDoubleSplitComplex(
-                                realp: UnsafeMutablePointer<Double>(mutating: inputADoubleBuffer.baseAddress!),
-                                imagp: UnsafeMutablePointer<Double>(mutating: inputADoubleBuffer.baseAddress! + 1))
-                        
-                        withUnsafePointer(to: complexScalarB) { inputBPointer in
-                            inputBPointer.withMemoryRebound(to: Double.self, capacity: 2) { inputBDoublePointer in
-                                var inputBSplitComplex =
-                                    DSPDoubleSplitComplex(
-                                        realp: UnsafeMutablePointer<Double>(mutating: inputBDoublePointer),
-                                        imagp: UnsafeMutablePointer<Double>(mutating: inputBDoublePointer + 1))
-                                
-                                wrapping(&inputASplitComplex, 2, &inputBSplitComplex, &outputSplitComplex, 2, vDSP_Length(count))
-                            }
-                        }
-                    }
-                }
-            }
-            initializedCount = count
-        }
-    }
-    
     
     public static func multiply (_ complexVector: [DSPDoubleComplex], _ complexScalar: DSPDoubleComplex) -> [DSPDoubleComplex] {
-        vDSP_wrapper_zvzszv(wrapping: { A, IA, B, Out, IOut, N in
+        vDSP_wrapperForm_zvzszv(wrapping: { A, IA, B, Out, IOut, N in
             vDSP_zvzsmlD(A, IA, B, Out, IOut, N)
             
         }, complexVectorA: complexVector, complexScalarB: complexScalar)
