@@ -39,7 +39,7 @@ extension Complex: CustomStringConvertible where Real: CustomStringConvertible{
             }else if (real as! (any FloatingPoint)).isZero{
                 return imag.description + "𝒊"
             }else{
-                return "(" + real.description + ((imag as! Double).sign == .minus ? "-" : "+") + (imag as! Double).magnitude.description + "𝒊)"
+                return "(" + real.description + ((imag as! (any FloatingPoint)).sign == .minus ? "-" : "+") + ((imag as! (any FloatingPoint)).magnitude as! Real).description + "𝒊)"
             }
         }else{
             return "Complex<\(Real.self)>(" + real.description + "," + imag.description + ")"
@@ -49,10 +49,11 @@ extension Complex: CustomStringConvertible where Real: CustomStringConvertible{
 
 
 // MARK: - ExpressibleByFloatLiteral
-extension Complex: ExpressibleByFloatLiteral where Real: ExpressibleByFloatLiteral{
+extension Complex: ExpressibleByFloatLiteral where Real: ExpressibleByFloatLiteral, Real.FloatLiteralType: ExpressibleByIntegerLiteral{
     public init(floatLiteral value: Real.FloatLiteralType) {
         self.real = Real(floatLiteral: value)
-        self.imag = Real(floatLiteral: 0.0 as! Real.FloatLiteralType) // _ExpressibleByBuiltinFloatLiteral = {Float, Double, Float80}
+        let zero: Real.FloatLiteralType = 0
+        self.imag = Real(floatLiteral: zero) // _ExpressibleByBuiltinFloatLiteral = {Float, Double, Float80}
     }
 }
 

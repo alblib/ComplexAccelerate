@@ -9,12 +9,13 @@ import Foundation
 import Accelerate
 import simd
 
+
 public func abs<Real>(_ z: Complex<Real>) -> Real where Real: FloatingPoint{
     z.magnitude
 }
 
 public func arg(_ z: Complex<Float>) -> Float{
-    atan2(z.imag, z.real)
+    atan2f(z.imag, z.real)
 }
 
 public func arg(_ z: Complex<Double>) -> Double{
@@ -22,11 +23,11 @@ public func arg(_ z: Complex<Double>) -> Double{
 }
 
 public func log(_ z: Complex<Float>) -> Complex<Float>{
-    .init(real: log(abs(z)), imag: arg(z))
+    Complex<Float>(real: logf(abs(z)), imag: arg(z))
 }
 
 public func log(_ z: Complex<Double>) -> Complex<Double>{
-    .init(real: log(abs(z)), imag: arg(z))
+    Complex<Double>(real: log(abs(z)), imag: arg(z))
 }
 
 public func exp(_ z: Complex<Float>) -> Complex<Float>{
@@ -36,7 +37,7 @@ public func exp(_ z: Complex<Float>) -> Complex<Float>{
                 __sincosf(z.imag, buffer.baseAddress! + 1, buffer.baseAddress!)
                 initializedCount = 2
             }
-            var mag = exp(z.real)
+            var mag = expf(z.real)
             vDSP_vsmul(cossin, 1, &mag, buffer.baseAddress!, 1, vDSP_Length(2))
         }
         initializedCount = 1
@@ -138,6 +139,44 @@ public func coth(_ z: Complex<Double>) -> Complex<Double>{
     return numerator / denominator
 }
 
+/// Defines the complex function ㏑(z + √(z^2 - 1)) which analytically extends to `acosh`.
+public func acosh(_ z: Complex<Float>) -> Complex<Float>{
+    log(sqrt(z * z - 1) + z)
+}
+
+/// Defines the complex function ㏑(z + √(z^2 - 1)) which analytically extends to `acosh`.
+public func acosh(_ z: Complex<Double>) -> Complex<Double>{
+    log(sqrt(z * z - 1) + z)
+}
+
+/// Defines the complex function ㏑(z + √(z^2 + 1)) which analytically extends to `asinh`.
+public func asinh(_ z: Complex<Float>) -> Complex<Float>{
+    log(sqrt(z * z + 1) + z)
+}
+
+/// Defines the complex function ㏑(z + √(z^2 + 1)) which analytically extends to `asinh`.
+public func asinh(_ z: Complex<Double>) -> Complex<Double>{
+    log(sqrt(z * z + 1) + z)
+}
+
+/// Defines the complex function ㏑(√((1 + z) / (1 - z))) which analytically extends to `atanh`.
+public func atanh(_ z: Complex<Float>) -> Complex<Float>{
+    log(sqrt((1 + z) / (1 - z)))
+}
+/// Defines the complex function ㏑(√((1 + z) / (1 - z))) which analytically extends to `atanh`.
+public func atanh(_ z: Complex<Double>) -> Complex<Double>{
+    log(sqrt((1 + z) / (1 - z)))
+}
+
+/// Defines the complex function ㏑(√((z + 1) / (z - 1))) which analytically extends to `acoth`.
+public func acoth(_ z: Complex<Float>) -> Complex<Float>{
+    log(sqrt((z + 1) / (z - 1)))
+}
+/// Defines the complex function ㏑(√((z + 1) / (z - 1))) which analytically extends to `acoth`.
+public func acoth(_ z: Complex<Double>) -> Complex<Double>{
+    log(sqrt((z + 1) / (z - 1)))
+}
+
 public func cos(_ z: Complex<Float>) -> Complex<Float>{
     cosh(.init(real: -z.imag, imag: z.real))
 }
@@ -169,27 +208,25 @@ public func cot(_ z: Complex<Double>) -> Complex<Double>{
     return .init(real: -id.imag, imag: id.real)
 }
 
-
+/*
 // MARK: Gamma Function
 
 // https://www.quora.com/How-do-I-calculate-the-gamma-function-of-a-complex-number
 // https://mathworld.wolfram.com/LogGammaFunction.html
-/*
+
 public func lgamma(_ z: Complex<Float>) -> Complex<Float>{
-    var result = Complex<Float>(real: z.real * Float.eulerGamma, imag: z.imag * Float.eulerGamma)
+    var result = Complex<Float>(real: -z.real * Float.eulerGamma, imag: -z.imag * Float.eulerGamma)
     result -= log(z)
     var iteration = z - log(1+z)
     var k: Int = 1
     var resultSquareMagnitude = result.squareMagnitude
     var iterationSquareMagnitude = iteration.squareMagnitude
-    print("result = \(result);  iteration = \(iteration)")
     while iterationSquareMagnitude / resultSquareMagnitude >= Float.ulpOfOne * Float.ulpOfOne{
         result += iteration
         resultSquareMagnitude = result.squareMagnitude
         k += 1
         let zOverK = Complex<Float>(real: z.real / Float(k), imag: z.imag / Float(k))
         iteration = zOverK - log(1+zOverK)
-        print("result = \(result);  iteration = \(iteration)")
         iterationSquareMagnitude = iteration.squareMagnitude
         if resultSquareMagnitude < iterationSquareMagnitude{
             return .init(real: .infinity, imag: .nan)
@@ -197,4 +234,27 @@ public func lgamma(_ z: Complex<Float>) -> Complex<Float>{
     }
     return result
 }
+
+public func lgamma(_ z: Complex<Double>) -> Complex<Double>{
+    var result = Complex<Double>(real: -z.real * Double.eulerGamma, imag: -z.imag * Double.eulerGamma)
+    result -= log(z)
+    var iteration = z - log(1+z)
+    var k: Int = 1
+    var resultSquareMagnitude = result.squareMagnitude
+    var iterationSquareMagnitude = iteration.squareMagnitude
+    while iterationSquareMagnitude / resultSquareMagnitude >= Double.ulpOfOne * Double.ulpOfOne{
+        result += iteration
+        resultSquareMagnitude = result.squareMagnitude
+        k += 1
+        let zOverK = Complex<Double>(real: z.real / Double(k), imag: z.imag / Double(k))
+        iteration = zOverK - log(1+zOverK)
+        iterationSquareMagnitude = iteration.squareMagnitude
+        if resultSquareMagnitude < iterationSquareMagnitude{
+            return .init(real: .infinity, imag: .nan)
+        }
+    }
+    return result
+}
+
+
 */

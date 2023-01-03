@@ -32,6 +32,16 @@ Basic mathematical and transcendental functions on single precision complex numb
 - ``coth(_:)-1hab1``
 - ``coth(_:)-7tzt3``
 
+### Inverse Hyperbolic Functions
+- ``acosh(_:)-5mgxh``
+- ``acosh(_:)-3rgdk``
+- ``asinh(_:)-4p7bd``
+- ``asinh(_:)-1p72s``
+- ``atanh(_:)-88065``
+- ``atanh(_:)-6dnp1``
+- ``acoth(_:)-6vluc``
+- ``acoth(_:)-8g8a4``
+
 ### Trigonometric Functions
 - ``cos(_:)-4s8m5``
 - ``cos(_:)-1tcd4``
