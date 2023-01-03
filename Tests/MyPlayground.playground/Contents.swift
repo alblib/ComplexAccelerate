@@ -22,5 +22,13 @@ print(vDSPDoubleComplexVector.multiply([.init(real: 1, imag: 2),.init(real: 3, i
 let aa: Complex<Double> = 1
 print(aa)
 Complex<Double>()
+let a: () -> () = {}
+print(a)
+print(Complex(real: a, imag: a))
 
-print (2 + 3 * Complex<Double>.I)
+print (cos(2 - 2 * Complex<Double>.I))
+var adv = cos(2 - 2 * Complex<Double>.I)
+adv *= 2
+print("adv = \(adv)")
+print(cos(Complex<Double>(floatLiteral: Double.pi/2)))
+print(lgamma(Complex<Float>(real: 0, imag: 2)))
