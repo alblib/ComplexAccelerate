@@ -8,6 +8,9 @@ Basic mathematical and transcendental functions on single precision complex numb
 
 ## Topics
 
+### Discussions
+- <doc:Complex-Functions-HyperbolicAndTrigonometric>
+
 ### Complex Analysis
 
 - ``abs(_:)``
@@ -51,3 +54,14 @@ Basic mathematical and transcendental functions on single precision complex numb
 - ``tan(_:)-9d7g6``
 - ``cot(_:)-7gat1``
 - ``cot(_:)-9amvx``
+
+### Inverse Trigonometric Functions
+- ``acos(_:)-4rx38``
+- ``acos(_:)-9caet``
+- ``asin(_:)-42hn9``
+- ``asin(_:)-71gfk``
+- ``atan(_:)-6zvk5``
+- ``atan(_:)-1knhz``
+- ``acot(_:)-1b74z``
+- ``acot(_:)-367sc``
+
