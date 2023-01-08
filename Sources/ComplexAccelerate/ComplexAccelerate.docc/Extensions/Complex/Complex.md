@@ -14,6 +14,10 @@
 - ``init()``
 - ``init(real:imag:)``
 
+### Mathematical Functions
+- <doc:Complex-Functions>
+
+
 ### vDSP Pointer for Single Precision
 - ``withDSPComplexPointer(_:)``
 - ``withDSPSplitComplexPointer(_:)``

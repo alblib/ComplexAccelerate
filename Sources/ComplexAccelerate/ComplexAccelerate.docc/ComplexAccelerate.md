@@ -8,9 +8,9 @@
 
 ## Topics
 
-### Operator Overloading over Complex Numbers
+### Singlet Definitions and Operations of Complex Numbers
 
-- <doc:Complex-Topics>
+- ``Complex``
 
 ### Parallel Operations
 
