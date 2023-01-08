@@ -8,9 +8,6 @@ Basic mathematical and transcendental functions on single precision complex numb
 
 ## Topics
 
-### Discussions
-- <doc:Complex-Functions-HyperbolicAndTrigonometric>
-
 ### Complex Analysis
 
 - ``abs(_:)``

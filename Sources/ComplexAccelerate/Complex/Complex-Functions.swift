@@ -177,100 +177,110 @@ public func coth(_ z: Complex<Double>) -> Complex<Double>{
     return numerator / denominator
 }
 
-/// Defines the complex function cosh⁻¹(𝑧) := ㏑(𝑧 + √(𝑧² - 1)) which analytically extends to `acosh`.
+/// Defines the complex function cosh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² - 1)) which analytically extends to `acosh`.
 ///
-/// This function defines the analytic continuation of the inverse hyperbolic cosine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
+/// This function defines the complex inverse hyperbolic cosine function cosh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² - 1)). To see definition of 'Ln', see ``log(_:)-52em1``.
 ///
-/// While ``cosh(_:)-b4lw`` and ``cos(_:)-4s8m5`` are directly connected, this function and ``acos(_:)-4rx38`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function defines the analytic continuation of the inverse hyperbolic cosine function `acosh` to the complex domain and chooses the branch that is farthest from the real function domain, which is conventional branch for the complex function.
+///
+/// While ``cosh(_:)-b4lw`` and ``cos(_:)-4s8m5`` are directly connected, this function and ``acos(_:)-4rx38`` are not directly connected since they have different branch configurations to match the real domain defnitions.
+/// For more discussion on this topic, see
+/// [Inverse Hyperbolic Cosine](https://mathworld.wolfram.com/InverseHyperbolicCosine.html)
 public func acosh(_ z: Complex<Float>) -> Complex<Float>{
     log(sqrt(z * z - 1) + z)
 }
 
-/// Defines the complex function cosh⁻¹(𝑧) := ㏑(𝑧 + √(𝑧² - 1)) which analytically extends to `acosh`.
+/// Defines the complex function cosh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² - 1)) which analytically extends to `acosh`.
 ///
-/// This function defines the analytic continuation of the inverse hyperbolic cosine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
+/// This function defines the complex inverse hyperbolic cosine function cosh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² - 1)). To see definition of 'Ln', see ``log(_:)-3ushm``.
 ///
-/// While ``cosh(_:)-1hn2v`` and ``cos(_:)-1tcd4`` are directly connected, this function and ``acos(_:)-9caet`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function defines the analytic continuation of the inverse hyperbolic cosine function `acosh` to the complex domain and chooses the branch that is farthest from the real function domain, which is conventional branch for the complex function.
+///
+/// While ``cosh(_:)-1hn2v`` and ``cos(_:)-1tcd4`` are directly connected, this function and ``acos(_:)-9caet`` are not directly connected since they have different branch configurations to match the real domain defnitions.
+/// For more discussion on this topic, see
+/// [Inverse Hyperbolic Cosine](https://mathworld.wolfram.com/InverseHyperbolicCosine.html).
 public func acosh(_ z: Complex<Double>) -> Complex<Double>{
     log(sqrt(z * z - 1) + z)
 }
 
-/// Defines the complex function sinh⁻¹(𝑧) := ㏑(𝑧 + √(𝑧² + 1)) which analytically extends to `asinh`.
+/// Defines the complex function sinh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² + 1)) which analytically extends to `asinh`.
 ///
-/// This function defines the analytic continuation of the inverse hyperbolic sine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
-///
-/// While ``sinh(_:)-7q9zp`` and ``sin(_:)-9uhtf`` are directly connected, this function and ``asin(_:)-42hn9`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function is defined by sinh⁻¹(𝑧) := Ln(𝑧 + √(𝑧² + 1)) while the all branches of the inverse functions of the hyperbolic sine function is represented by ln(𝑧 ± √(𝑧² + 1)) = 2 𝜋 𝑖 𝑛 + ln(𝑧 ± √(𝑧² + 1)) = 2 𝜋 𝑖 𝑛 ± Ln(𝑧 + √(𝑧² + 1)), for all integer 𝑛.
+/// See ``log(_:)-52em1`` for the definition of the principal log 'Ln'.
 public func asinh(_ z: Complex<Float>) -> Complex<Float>{
     log(sqrt(z * z + 1) + z)
 }
 
-/// Defines the complex function sinh⁻¹(𝑧) := ㏑(𝑧 + √(𝑧² + 1)) which analytically extends to `asinh`.
+/// Defines the complex function sinh⁻¹(𝑧) := Ln (𝑧 + √(𝑧² + 1)) which analytically extends to `asinh`.
 ///
-/// This function defines the analytic continuation of the inverse hyperbolic sine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
-///
-/// While ``sinh(_:)-45gxc`` and ``sin(_:)-2qzc4`` are directly connected, this function and ``asin(_:)-71gfk`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function is defined by sinh⁻¹(𝑧) := Ln(𝑧 + √(𝑧² + 1)) while the all branches of the inverse functions of the hyperbolic sine function is represented by ln(𝑧 ± √(𝑧² + 1)) = 2 𝜋 𝑖 𝑛 + ln(𝑧 ± √(𝑧² + 1)) = 2 𝜋 𝑖 𝑛 ± Ln(𝑧 + √(𝑧² + 1)), for all integer 𝑛.
+/// See ``log(_:)-3ushm`` for the definition of the principal log 'Ln'.
 public func asinh(_ z: Complex<Double>) -> Complex<Double>{
     log(sqrt(z * z + 1) + z)
 }
 
-/// Defines the complex function tanh⁻¹(𝑧) := ㏑(√((1 + 𝑧) / (1 - 𝑧))) which analytically extends to `atanh`.
+/// Defines the complex function tanh⁻¹(𝑧) := Ln (√((1 + 𝑧) / (1 - 𝑧))) which analytically extends to `atanh`.
+///
+/// See ``log(_:)-52em1`` for the definition of the principal log 'Ln'.
 public func atanh(_ z: Complex<Float>) -> Complex<Float>{
     log(sqrt((1 + z) / (1 - z)))
 }
-/// Defines the complex function tanh⁻¹(𝑧) := ㏑(√((1 + 𝑧) / (1 - 𝑧))) which analytically extends to `atanh`.
+/// Defines the complex function tanh⁻¹(𝑧) := Ln (√((1 + 𝑧) / (1 - 𝑧))) which analytically extends to `atanh`.
+///
+/// See ``log(_:)-3ushm`` for the definition of the principal log 'Ln'.
 public func atanh(_ z: Complex<Double>) -> Complex<Double>{
     log(sqrt((1 + z) / (1 - z)))
 }
 
-/// Defines the complex function coth⁻¹(𝑧) := ㏑(√((𝑧 + 1) / (𝑧 - 1))) which analytically extends to `acoth`.
+/// Defines the complex function coth⁻¹(𝑧) := Ln (√((𝑧 + 1) / (𝑧 - 1))) which analytically extends to `acoth`.
+///
+/// See ``log(_:)-52em1`` for the definition of the principal log 'Ln'.
 public func acoth(_ z: Complex<Float>) -> Complex<Float>{
     log(sqrt((z + 1) / (z - 1)))
 }
-/// Defines the complex function coth⁻¹(𝑧) := ㏑(√((𝑧 + 1) / (𝑧 - 1))) which analytically extends to `acoth`.
+/// Defines the complex function coth⁻¹(𝑧) := Ln (√((𝑧 + 1) / (𝑧 - 1))) which analytically extends to `acoth`.
+///
+/// See ``log(_:)-3ushm`` for the definition of the principal log 'Ln'.
 public func acoth(_ z: Complex<Double>) -> Complex<Double>{
     log(sqrt((z + 1) / (z - 1)))
 }
 
 // MARK: - Trigonometric Functions
 
-/// Defines cos(𝑧) := cosh(𝒊𝑧) which analytically extends to the known real function `cos`.
+/// Defines cos 𝑧 := cosh 𝑖 𝑧 which analytically extends to the known real function `cos`.
 public func cos(_ z: Complex<Float>) -> Complex<Float>{
     cosh(.init(real: -z.imag, imag: z.real))
 }
-/// Defines cos(𝑧) := cosh(𝒊𝑧) which analytically extends to the known real function `cos`.
+/// Defines cos 𝑧 := cosh 𝑖 𝑧 which analytically extends to the known real function `cos`.
 public func cos(_ z: Complex<Double>) -> Complex<Double>{
     cosh(.init(real: -z.imag, imag: z.real))
 }
-/// Defines sin(𝑧) := -𝒊 sinh(𝒊𝑧) which analytically extends to the known real function `sin`.
+/// Defines sin 𝑧 := − 𝑖 sinh 𝑖 𝑧 which analytically extends to the known real function `sin`.
 public func sin(_ z: Complex<Float>) -> Complex<Float>{
     let id = sinh(.init(real: -z.imag, imag: z.real))
     return .init(real: id.imag, imag: -id.real)
 }
-/// Defines sin(𝑧) := -𝒊 sinh(𝒊𝑧) which analytically extends to the known real function `sin`.
+/// Defines sin 𝑧 := − 𝑖 sinh 𝑖 𝑧 which analytically extends to the known real function `sin`.
 public func sin(_ z: Complex<Double>) -> Complex<Double>{
     let id = sinh(.init(real: -z.imag, imag: z.real))
     return .init(real: id.imag, imag: -id.real)
 }
-/// Defines tan(𝑧) := -𝒊 tanh(𝒊𝑧) which analytically extends to the known real function `tan`.
+/// Defines tan 𝑧 := − 𝑖 tanh 𝑖 𝑧 which analytically extends to the known real function `tan`.
 public func tan(_ z: Complex<Float>) -> Complex<Float>{
     let id = tanh(.init(real: -z.imag, imag: z.real))
     return .init(real: id.imag, imag: -id.real)
 }
-/// Defines tan(𝑧) := -𝒊 tanh(𝒊𝑧) which analytically extends to the known real function `tan`.
+/// Defines tan 𝑧 := − 𝑖 tanh 𝑖 𝑧 which analytically extends to the known real function `tan`.
 public func tan(_ z: Complex<Double>) -> Complex<Double>{
     let id = tanh(.init(real: -z.imag, imag: z.real))
     return .init(real: id.imag, imag: -id.real)
 }
-/// Defines cot(𝑧) := 𝒊 coth(𝒊𝑧) which analytically extends to the known real function `cot`.
+/// Defines cot 𝑧 := 𝑖 coth 𝑖 𝑧 which analytically extends to the known real function `cot`.
 public func cot(_ z: Complex<Float>) -> Complex<Float>{
     let id = coth(.init(real: -z.imag, imag: z.real))
     return .init(real: -id.imag, imag: id.real)
 }
-/// Defines cot(𝑧) := 𝒊 coth(𝒊𝑧) which analytically extends to the known real function `cot`.
+/// Defines cot 𝑧 := 𝑖 coth 𝑖 𝑧 which analytically extends to the known real function `cot`.
 public func cot(_ z: Complex<Double>) -> Complex<Double>{
     let id = coth(.init(real: -z.imag, imag: z.real))
     return .init(real: -id.imag, imag: id.real)
@@ -278,56 +288,58 @@ public func cot(_ z: Complex<Double>) -> Complex<Double>{
 
 // MARK: - Inverse Trigonometric Functions
 
-/// Defines cos⁻¹(𝑧) := 𝒊 ㏑(𝑧 - √(𝑧² - 1)) which analytically extends to the known real function `acos`.
+/// Defines cos⁻¹ 𝑧 := 𝜋 / 2 + 𝑖 Ln (𝑖 𝑧 + √(1 - 𝑧²)) which analytically extends to the known real function `acos`.
 ///
-/// This function defines the analytic continuation of the arc cosine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
+/// This function defiens the complex inverse hyperbolic cosine function cos⁻¹ 𝑧 := 𝜋 / 2 + 𝑖 Ln (𝑖 𝑧 + √(1 - 𝑧²)). To see definition of 'Ln', see ``log(_:)-52em1``.
 ///
-/// While ``cos(_:)-1tcd4`` and ``cosh(_:)-b4lw`` are directly connected, this function and ``acosh(_:)-5mgxh`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function defines the analytic continuation of the arc cosine function to the complex domain that is chosen to be the farthest from the real domain of `acos`, which is conventional.
+///
+/// While ``cos(_:)-4s8m5`` and ``cosh(_:)-b4lw`` are directly connected, this function and ``acosh(_:)-5mgxh`` are not directly connected since their branch configurations are different.
+/// For more discussion on this topic, see [MathWorld: Inverse Hyperbolic Cosine](https://mathworld.wolfram.com/InverseCosine.html).
 public func acos(_ z: Complex<Float>) -> Complex<Float>{
-    let yetITimed = log(z - sqrt(z * z - 1))
-    return .init(real: -yetITimed.imag, imag: yetITimed.real)
+    let yetITimed = log(.init(real: -z.imag, imag: z.real) + sqrt(z * z - 1))
+    return .init(real: Float.pi / 2 - yetITimed.imag, imag: yetITimed.real)
 }
 
-/// Defines cos⁻¹(𝑧) := 𝒊 ㏑(𝑧 - √(𝑧² - 1)) which analytically extends to the known real function `acos`.
+/// Defines cos⁻¹ 𝑧 := 𝜋 / 2 + 𝑖 Ln (𝑖 𝑧 + √(1 - 𝑧²)) which analytically extends to the known real function `acos`.
 ///
-/// This function defines the analytic continuation of the arc cosine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
+/// This function defiens the complex inverse hyperbolic cosine function cos⁻¹ 𝑧 := 𝜋 / 2 + 𝑖 Ln (𝑖 𝑧 + √(1 - 𝑧²)). To see definition of 'Ln', see ``log(_:)-3ushm``.
 ///
-/// While ``cos(_:)-1tcd4`` and ``cosh(_:)-1hn2v`` are directly connected, this function and ``acosh(_:)-3rgdk`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// This function defines the analytic continuation of the arc cosine function to the complex domain that is chosen to be the farthest from the real domain of `acos`, which is conventional.
+///
+/// While ``cos(_:)-1tcd4`` and ``cosh(_:)-b4lw`` are directly connected, this function and ``acosh(_:)-3rgdk`` are not directly connected since their branch configurations are different.
+/// For more discussion on this topic, see [MathWorld: Inverse Hyperbolic Cosine](https://mathworld.wolfram.com/InverseCosine.html).
 public func acos(_ z: Complex<Double>) -> Complex<Double>{
-    let yetITimed = log(z - sqrt(z * z - 1))
-    return .init(real: -yetITimed.imag, imag: yetITimed.real)
+    let yetITimed = log(.init(real: -z.imag, imag: z.real) + sqrt(z * z - 1))
+    return .init(real: Double.pi / 2 - yetITimed.imag, imag: yetITimed.real)
 }
 
-/// Defines sin⁻¹(𝑧) := -𝒊 ㏑(𝒊𝑧 + √(1 - 𝑧²)) which analytically extends to the known real function `asin`.
+/// Defines sin⁻¹ 𝑧 := − 𝑖 sinh⁻¹ 𝑖 𝑧 which analytically extends to the known real function `asin`.
 ///
-/// This function defines the analytic continuation of the arc sine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
-///
-/// While ``sin(_:)-9uhtf`` and ``sinh(_:)-7q9zp`` are directly connected, this function and ``asinh(_:)-4p7bd`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
+/// The inverse sine function in complex domain is defined by sin⁻¹ 𝑧 := − 𝑖 sinh⁻¹ 𝑖 𝑧.
+/// See ``asinh(_:)-4p7bd`` for the definition of sinh⁻¹.
 public func asin(_ z: Complex<Float>) -> Complex<Float>{
     let iz = Complex<Float>(real: -z.imag, imag: z.real)
     let stillITimed = log(iz + sqrt(1 - z * z))
     return .init(real: stillITimed.imag, imag: -stillITimed.real)
 }
 
-/// Defines sin⁻¹(𝑧) := -𝒊 ㏑(𝒊𝑧 + √(1 - 𝑧²)) which analytically extends to the known real function `asin`.
+/// Defines sin⁻¹ 𝑧 := − 𝑖 sinh⁻¹ 𝑖 𝑧 which analytically extends to the known real function `asin`.
 ///
-/// This function defines the analytic continuation of the arc sine function to the complex domain that is chosen to be the conventional principal branch among multi-branch complex logarithm.
-///
-/// While ``sin(_:)-2qzc4`` and ``sinh(_:)-45gxc`` are directly connected, this function and ``asinh(_:)-1p72s`` are not directly connected since they are the inverse functions of different branches.
-/// For more discussion on this topic, see <doc:Complex-Functions-HyperbolicAndTrigonometric>.
+/// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
+/// The inverse sine function in complex domain is defined by sin⁻¹ 𝑧 := − 𝑖 sinh⁻¹ 𝑖 𝑧.
+/// See ``asinh(_:)-1p72s`` for the definition of sinh⁻¹.
 public func asin(_ z: Complex<Double>) -> Complex<Double>{
     let iz = Complex<Double>(real: -z.imag, imag: z.real)
-    let stillITimed = log(iz + sqrt(1 - z * z))
+    let stillITimed = asinh(iz)
     return .init(real: stillITimed.imag, imag: -stillITimed.real)
 }
 
-/// Defines tan⁻¹(𝑧) := tanh⁻¹(𝒊𝑧) / 𝒊 which analytically extends to the known real function `atan`.
+/// Defines tan⁻¹ 𝑧 := − 𝑖 tanh⁻¹ 𝑖 𝑧 which analytically extends to the known real function `atan`.
 ///
 /// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
-/// The inverse tangent function in complex domain is defined by tan⁻¹(𝑧) := tanh⁻¹(𝒊𝑧) / 𝒊.
+/// The inverse tangent function in complex domain is defined by tan⁻¹ 𝑧 := − 𝑖 tanh⁻¹ 𝑖 𝑧.
 /// See ``atanh(_:)-88065`` for the definition of tanh⁻¹.
 public func atan(_ z: Complex<Float>) -> Complex<Float>{
     let atanhIz = atanh(.init(real: -z.imag, imag: z.real))
@@ -335,10 +347,10 @@ public func atan(_ z: Complex<Float>) -> Complex<Float>{
 }
 
 
-/// Defines tan⁻¹(𝑧) := tanh⁻¹(𝒊𝑧) / 𝒊 which analytically extends to the known real function `atan`.
+/// Defines tan⁻¹ 𝑧 := − 𝑖 tanh⁻¹ 𝑖 𝑧 which analytically extends to the known real function `atan`.
 ///
 /// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
-/// The inverse tangent function in complex domain is defined by tan⁻¹(𝑧) := tanh⁻¹(𝒊𝑧) / 𝒊.
+/// The inverse tangent function in complex domain is defined by tan⁻¹ 𝑧 := − 𝑖 tanh⁻¹ 𝑖 𝑧.
 /// See ``atanh(_:)-6dnp1`` for the definition of tanh⁻¹.
 public func atan(_ z: Complex<Double>) -> Complex<Double>{
     let atanhIz = atanh(.init(real: -z.imag, imag: z.real))
@@ -346,10 +358,10 @@ public func atan(_ z: Complex<Double>) -> Complex<Double>{
 }
 
 
-/// Defines cot⁻¹(𝑧) := 𝒊 coth⁻¹(𝒊𝑧) which analytically extends to the known real function `acot`.
+/// Defines cot⁻¹ 𝑧 := 𝑖 coth⁻¹ 𝑖 𝑧 which analytically extends to the known real function `acot`.
 ///
 /// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
-/// The inverse cotangent function in complex domain is defined by cot⁻¹(𝑧) := 𝒊 coth⁻¹(𝒊𝑧).
+/// The inverse cotangent function in complex domain is defined by cot⁻¹ 𝑧 := 𝑖 coth⁻¹ 𝑖 𝑧.
 /// See ``acoth(_:)-6vluc`` for the definition of coth⁻¹.
 public func acot(_ z: Complex<Float>) -> Complex<Float>{
     let acothIz = acoth(.init(real: -z.imag, imag: z.real))
@@ -357,10 +369,10 @@ public func acot(_ z: Complex<Float>) -> Complex<Float>{
 }
 
 
-/// Defines cot⁻¹(𝑧) := 𝒊 coth⁻¹(𝒊𝑧) which analytically extends to the known real function `acot`.
+/// Defines cot⁻¹ 𝑧 := 𝑖 coth⁻¹ 𝑖 𝑧 which analytically extends to the known real function `acot`.
 ///
 /// Trigonometric functions and hyperbolic functions are connected and basically equivalent in complex level.
-/// The inverse cotangent function in complex domain is defined by cot⁻¹(𝑧) := 𝒊 coth⁻¹(𝒊𝑧).
+/// The inverse cotangent function in complex domain is defined by cot⁻¹ 𝑧 := 𝑖 coth⁻¹ 𝑖 𝑧.
 /// See ``acoth(_:)-8g8a4`` for the definition of coth⁻¹.
 public func acot(_ z: Complex<Double>) -> Complex<Double>{
     let acothIz = acoth(.init(real: -z.imag, imag: z.real))

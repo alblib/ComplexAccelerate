@@ -17,7 +17,6 @@ Parallel arithmetics between two `[DSPDoubleComplex]`s:
 
 ### Transcendental Functions
 
-
 - ``ComplexAccelerate/ComplexAccelerate/log(_:)``
 - ``ComplexAccelerate/ComplexAccelerate/exp(_:)``
 
