@@ -10,6 +10,11 @@ we defined such functions using `vForce` functions.
 
 
 ## Topics
+
+### Absolute and Negation Functions
+- ``Vector/absolute(_:)-1xm7m``
+- ``Vector/negative(_:)-2yqio``
+
 ### Parallel Arithmetics Between Complexes
 - ``Vector/add(_:_:)-7ht90``
 - ``Vector/subtract(_:_:)-fd0u``
@@ -19,5 +24,9 @@ we defined such functions using `vForce` functions.
 
 ### Parallel Arithmetics Between Reals and Complexes
 
+- ``Vector/add(_:_:)-4jlff``
+- ``Vector/add(_:_:)-8yn9h``
+- ``Vector/subtract(_:_:)-4d6ym``
 - ``Vector/multiply(_:_:)-7qu33``
 - ``Vector/multiply(_:_:)-9zkpc``
+- ``Vector/divide(_:_:)-52plx``

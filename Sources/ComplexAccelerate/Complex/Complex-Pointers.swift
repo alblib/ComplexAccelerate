@@ -8,84 +8,53 @@
 import Foundation
 import Accelerate
 
-// MARK: Single Precision Pointers
 
-extension Complex where Real == Float{
-    /// Provides the `UnsafePointer<DSPComplex>` to the given closure where the pointer points `self` but the type is converted to `DSPComplex`.
-    public func withDSPComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPComplex>) -> ()){
-        withUnsafePointer(to: self) { rawPointer in
-            rawPointer.withMemoryRebound(to: DSPComplex.self, capacity: 1) { pointer in
-                closure(pointer)
-            }
-        }
-    }
-    /// Provides the pointer to the `DSPSplitComplex` structure which points `self`.
-    /// - Remark: This function assumes that the `closure` mutates `self`. If not, you can use ``withDSPSplitComplexPointer(_:)``.
-    public mutating func withMutableDSPSplitComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> ()){
-        withUnsafeMutablePointer(to: &self) { rawPointer in
-            rawPointer.withMemoryRebound(to: Float.self, capacity: 2) { pointer in
-                var splitComplex = DSPSplitComplex(realp: pointer, imagp: pointer + 1)
-                closure(&splitComplex)
-            }
-        }
-    }
-    /// Provides the pointer to the `DSPSplitComplex` structure which points `self`, and also indicates that the given `closure` will never mutate `self`.
-    /// - Important: Using this function indicates that the `closure` never mutates `self`. However, as `DSPSplitComplex` holds `UnsafeMutablePointer<Float>` pointing to `self`, `closure` is not prohibited technically to mutate the content of `self`. Thus, you must be careful not to use this function if `closure` is a kind of function mutating the complex value or the content of complex value array pointed by its input pointer. If so, you must use ``withMutableDSPSplitComplexPointer(_:)``.
-    public func withDSPSplitComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> ()){
+/*
+protocol ParallelizableFloatingPoint: BinaryFloatingPoint{}
+extension Float: ParallelizableFloatingPoint{}
+extension Double: ParallelizableFloatingPoint{}
+ 
+*/
+
+protocol GenericComplex{
+    associatedtype Real
+    var real: Real { get }
+    var imag: Real { get }
+    
+}
+
+extension DSPComplex: GenericComplex{}
+extension DSPDoubleComplex: GenericComplex{}
+extension Complex: GenericComplex{}
+
+
+extension GenericComplex where Real == Float{
+    func withDSPSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R{
         withUnsafePointer(to: self) { rawPointer in
             rawPointer.withMemoryRebound(to: Float.self, capacity: 2) { pointer in
                 var splitComplex = DSPSplitComplex(realp: UnsafeMutablePointer(mutating: pointer), imagp: UnsafeMutablePointer(mutating: pointer + 1))
-                closure(&splitComplex)
+                return closure(&splitComplex)
             }
         }
     }
 }
-
-
-
-// MARK: Double Precision Pointers
-
-
-extension Complex where Real == Double{
-    /// Provides the `UnsafePointer<DSPDoubleComplex>` to the given closure where the pointer points `self` but the type is converted to `DSPDoubleComplex`.
-    public func withDSPDoubleComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPDoubleComplex>) -> ()){
-        withUnsafePointer(to: self) { rawPointer in
-            rawPointer.withMemoryRebound(to: DSPDoubleComplex.self, capacity: 1) { pointer in
-                closure(pointer)
-            }
-        }
-    }
-    
-    /// Provides the pointer to the `DSPDoubleSplitComplex` structure which points `self`.
-    /// - Remark: This function assumes that the `closure` mutates `self`. If not, you can use ``withDSPDoubleSplitComplexPointer(_:)``.
-    public mutating func withMutableDSPDoubleSplitComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> ()){
-        withUnsafeMutablePointer(to: &self) { rawPointer in
-            rawPointer.withMemoryRebound(to: Double.self, capacity: 2) { pointer in
-                var splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
-                closure(&splitComplex)
-            }
-        }
-    }
-    /// Provides the pointer to the `DSPDoubleSplitComplex` structure which points `self`, and also indicates that the given `closure` will never mutate `self`.
-    /// - Important: Using this function indicates that the `closure` never mutates `self`. However, as `DSPDoubleSplitComplex` holds `UnsafeMutablePointer<Double>` pointing to `self`, `closure` is not prohibited technically to mutate the content of `self`. Thus, you must be careful not to use this function if `closure` is a kind of function mutating the complex value or the content of complex value array pointed by its input pointer. If so, you must use ``withMutableDSPDoubleSplitComplexPointer(_:)``.
-    public func withDSPDoubleSplitComplexPointer(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> ()){
+extension GenericComplex where Real == Double{
+    func withDSPDoubleSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R{
         withUnsafePointer(to: self) { rawPointer in
             rawPointer.withMemoryRebound(to: Double.self, capacity: 2) { pointer in
                 var splitComplex = DSPDoubleSplitComplex(realp: UnsafeMutablePointer(mutating: pointer), imagp: UnsafeMutablePointer(mutating: pointer + 1))
-                closure(&splitComplex)
+                return closure(&splitComplex)
             }
         }
     }
 }
 
-// MARK: - Array Pointers
-
-public extension AccelerateBuffer where Element == Complex<Float>{
+extension AccelerateBuffer where Element: GenericComplex, Element.Real == Float{
     func withDSPSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Float.self) { floatBuffer in
+            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
                 if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
+                    var splitComplex = DSPSplitComplex.init(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
                     return closure(&splitComplex)
                 }else{
                     return nil
@@ -95,10 +64,10 @@ public extension AccelerateBuffer where Element == Complex<Float>{
     }
 }
 
-public extension AccelerateBuffer where Element == Complex<Double>{
+extension AccelerateBuffer where Element: GenericComplex, Element.Real == Double{
     func withDSPDoubleSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Double.self) { floatBuffer in
+            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
                 if let baseAddress = floatBuffer.baseAddress{
                     var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
                     return closure(&splitComplex)
@@ -110,31 +79,49 @@ public extension AccelerateBuffer where Element == Complex<Double>{
     }
 }
 
-public extension AccelerateBuffer where Element == DSPComplex{
-    func withDSPSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
+extension AccelerateBuffer where Element == Float{
+    func withRealPointer<R>(_ closure: (_ pointer: UnsafePointer<Element>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Float.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            if let baseAddress = buffer.baseAddress{
+                return closure(baseAddress)
+            }else{
+                return nil
             }
         }
     }
 }
 
-public extension AccelerateBuffer where Element == DSPDoubleComplex{
-    func withDSPDoubleSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R?{
+extension AccelerateBuffer where Element == Double{
+    func withRealPointer<R>(_ closure: (_ pointer: UnsafePointer<Element>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            return buffer.withMemoryRebound(to: Double.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            if let baseAddress = buffer.baseAddress{
+                return closure(baseAddress)
+            }else{
+                return nil
+            }
+        }
+    }
+}
+
+extension UnsafeMutableBufferPointer where Element == Float{
+    mutating func withRealMutablePointer<R>(_ closure: (_ pointer: UnsafeMutablePointer<Element>) -> R) -> R? {
+        self.withUnsafeMutableBufferPointer { buffer in
+            if let baseAddress = buffer.baseAddress{
+                return closure(baseAddress)
+            }else{
+                return nil
+            }
+        }
+    }
+}
+
+extension UnsafeMutableBufferPointer where Element == Double{
+    mutating func withRealMutablePointer<R>(_ closure: (_ pointer: UnsafeMutablePointer<Element>) -> R) -> R? {
+        self.withUnsafeMutableBufferPointer { buffer in
+            if let baseAddress = buffer.baseAddress{
+                return closure(baseAddress)
+            }else{
+                return nil
             }
         }
     }

@@ -38,4 +38,24 @@ public extension Vector where Element == Float{
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         parallel(vectorA, vectorB) { Accelerate.vDSP.divide($0, $1) }
     }
+    
+    // MARK: - Signs
+    
+    @inline(__always)
+    static func absolute<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        Accelerate.vDSP.absolute(vector)
+    }
+    
+    @inline(__always)
+    static func negative<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        Accelerate.vDSP.negative(vector)
+    }
+    
+    @inline(__always)
+    static func negativeAbsolute<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        Accelerate.vDSP.negativeAbsolute(vector)
+    }
 }

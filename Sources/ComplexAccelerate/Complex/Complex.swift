@@ -6,11 +6,8 @@
 //
 
 import Foundation
-/*
-public protocol ParallelizableFloatingPoint: BinaryFloatingPoint{}
-extension Float: ParallelizableFloatingPoint{}
-extension Double: ParallelizableFloatingPoint{}
- */
+
+
 
 // MARK: Definition
 

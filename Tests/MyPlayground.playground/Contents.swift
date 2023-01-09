@@ -16,7 +16,9 @@ let aaa: [Int32] = [1,2,4]
 
 print(Vector<Complex<Float>>.multiply(vA,sB))
 //print(vDSP.add(vA,vB))
-print(Vector<Int32>.add())
+print(Vector<Int32>.add(2, aaa))
+
+print(vDSP.negative(afd))
 
 let end = DispatchTime.now()   // <<<<<<<<<<   end time
 let nanoTime: UInt64 = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
