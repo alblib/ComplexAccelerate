@@ -14,6 +14,12 @@
 - ``init()``
 - ``init(real:imag:)``
 
+### Conjugate and Inverse
+- ``conjugate``
+- ``squareMagnitude``
+- ``inverse``
+
+
 ### Mathematical Functions
 - <doc:Complex-Functions>
 

@@ -61,4 +61,3 @@ Basic mathematical and transcendental functions on single precision complex numb
 - ``atan(_:)-1knhz``
 - ``acot(_:)-1b74z``
 - ``acot(_:)-367sc``
-

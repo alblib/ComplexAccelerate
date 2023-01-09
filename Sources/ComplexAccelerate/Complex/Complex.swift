@@ -35,9 +35,21 @@ extension Complex: CustomStringConvertible where Real: CustomStringConvertible{
     public var description: String{
         if Real.self is any FloatingPoint.Type{
             if (imag as! (any FloatingPoint)).isZero{
-                return real.description
+                let realDescription = real.description
+                if realDescription.hasSuffix(".0"){
+                    return String(realDescription.prefix(realDescription.count - 2))
+                }else{
+                    return realDescription
+                }
             }else if (real as! (any FloatingPoint)).isZero{
-                return imag.description + "𝒊"
+                let imagDescription = imag.description
+                if imagDescription == "1.0"{
+                    return "𝒊"
+                }else if imagDescription.hasSuffix(".0"){
+                    return imagDescription.prefix(imagDescription.count - 2) + "𝒊"
+                }else{
+                    return imagDescription + "𝒊"
+                }
             }else{
                 return "(" + real.description + ((imag as! (any FloatingPoint)).sign == .minus ? "-" : "+") + ((imag as! (any FloatingPoint)).magnitude as! Real).description + "𝒊)"
             }
@@ -139,11 +151,22 @@ extension Complex where Real: Numeric {
         .init(real: 1, imag: .zero)
     }
     
-    /// The imaginary unit with magnitude 1, 𝒊.
+    /// The imaginary unit with magnitude one, 𝑖.
     public static var I: Complex<Real>{
         .init(real: .zero, imag: 1)
     }
     
+    /// The squared norm of the complex number.
+    ///
+    /// The value is defined only if the base field `Real` has definition of addition and multiplication.
+    /// `Real.Magnitude` is also required to be defined, concerning the `Real` type is not only a scalar type but also able to be a type with conjugate.
+    /// *e.g.* a quaternion as `Complex<Complex<Real>>`.
+    ///
+    /// For general [Cayley-Dickson construction](https://en.wikipedia.org/wiki/Cayley–Dickson_construction) 𝑎 + 𝑏 𝑖,
+    /// the squared norm is defined |𝑧|² = 𝑎* 𝑎 + 𝑏* 𝑏 = |𝑎|² + |𝑏|².
+    /// Thus, this function is also defined as (``real``.`magnitude`)² + (``imag``.`magnitude`)².
+    ///
+    /// If `Real` is `FloatingPoint` and thus applicable for `sqrt`, ``magnitude`` is defined.
     public var squareMagnitude: Real.Magnitude{
         let realMagnitude = real.magnitude
         let imagMagnitude = imag.magnitude
@@ -152,6 +175,10 @@ extension Complex where Real: Numeric {
 }
     
 extension Complex: Numeric where Real: Numeric, Real.Magnitude: FloatingPoint {
+    /// The magnitude of the complex number.
+    ///
+    /// This value is defined by the square root of ``squareMagnitude``, so the square root must be defined on `Real`, which is the requirement of the existence of this property.
+    /// Also, this is identical to ``abs(_:)``.
     public var magnitude: Real.Magnitude{
         sqrt(squareMagnitude)
     }
@@ -171,13 +198,27 @@ extension Complex: SignedNumeric where Real: SignedNumeric, Real.Magnitude: Floa
 
 // MARK: - Conjugate
 extension Complex where Real: SignedNumeric{
+    /// The complex conjugate. Automatic daisy chain is not available.
+    ///
+    /// - Returns: 𝑎 − 𝑏 𝑖 when `self` is 𝑎 + 𝑏 𝑖.
+    ///
+    /// Returns 𝑎 − 𝑏 𝑖 when `self` is 𝑎 + 𝑏 𝑖. Thus, `Real` is required to be `SignedNumeric`.
+    /// There is no way to guarantee existence of conjugate operation for generic type, the generalized conjugate 𝑎* − 𝑏* 𝑖 is not defined.
+    /// To define such conjugate in the case `Real` is conjugatable, define like `.init(real: .real.conjugate, imag: -.imag.conjugate)`.
+    /// > Important: Daisy chain of conjugate is not defined. You must define manually.
+    /// In the case `Real` is scalar *e.g.* `Complex<Float>` or `Complex<Double>`, you can ignore this tip.
     public var conjugate: Complex<Real>{
         .init(real: real, imag: -imag)
     }
 }
 
 extension Complex where Real: FloatingPoint{ // divisable
-    public var inverse: Self{
+    /// Inverse of the complex number.
+    ///
+    /// This property returns the inverse of the `self` complex number. This function is defined by ``conjugate`` `/` ``squareMagnitude``.
+    /// > Important: If `Real` is not scalar like `Float` or `Double` but conjugatable, this property does not guarantee to return the inverse. See ``conjugate`` and ``squareMagnitude`` for the detailed specifications.
+    /// - Returns: The inverse of the complex number `self` only if `Real` is scalar.
+    public var inverse: Complex<Real>{
         let sqrMag = squareMagnitude
         return .init(real: real / sqrMag, imag: (-imag) / sqrMag)
     }
