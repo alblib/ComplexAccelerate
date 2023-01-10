@@ -19,7 +19,8 @@ Basic mathematical and transcendental functions on single precision complex numb
 - ``log(_:)-3ushm``
 - ``pow(_:_:)-20qqx``
 - ``pow(_:_:)-1b8gk``
-
+- ``sqrt(_:)-3arhk``
+- ``sqrt(_:)-7bkkh``
 
 ### Hyperbolic Functions
 

@@ -9,6 +9,7 @@ import Foundation
 import Accelerate
 
 public enum Vector<Element>{
+    
     static func loop<VectorA>(_ vector: VectorA, operation: (Element) -> Element ) -> [Element]
     where VectorA: AccelerateBuffer, VectorA.Element == Element
     {
@@ -60,7 +61,7 @@ public extension Vector where Element: AdditiveArithmetic{
         loop(vectorA, vectorB) { $0 + $1 }
     }
     
-    static func substract<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
+    static func subtract<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         loop(vectorA, vectorB) { $0 - $1 }
     }
@@ -79,5 +80,4 @@ public extension Vector where Element: SignedNumeric{
         loop(vector) {-$0}
     }
 }
-
 

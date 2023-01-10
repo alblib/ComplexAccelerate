@@ -61,6 +61,10 @@ public func log(_ z: Complex<Double>) -> Complex<Double>{
     Complex<Double>(real: log(abs(z)), imag: arg(z))
 }
 
+/// The complex natural exponential function.
+///
+/// The fundamental exponential function in complex analysis is defined by the euler's formula:
+/// `exp(a+bi) = exp(a) * (cos(b) + i sin(b))`.
 public func exp(_ z: Complex<Float>) -> Complex<Float>{
     [Complex<Float>](unsafeUninitializedCapacity: 1) { buffer, initializedCount in
         buffer.withMemoryRebound(to: Float.self) { buffer in
@@ -75,6 +79,10 @@ public func exp(_ z: Complex<Float>) -> Complex<Float>{
     }[0]
 }
 
+/// The complex natural exponential function.
+///
+/// The fundamental exponential function in complex analysis is defined by the euler's formula:
+/// `exp(a+bi) = exp(a) * (cos(b) + i sin(b))`.
 public func exp(_ z: Complex<Double>) -> Complex<Double>{
     [Complex<Double>](unsafeUninitializedCapacity: 1) { buffer, initializedCount in
         buffer.withMemoryRebound(to: Double.self) { buffer in
@@ -89,15 +97,27 @@ public func exp(_ z: Complex<Double>) -> Complex<Double>{
     }[0]
 }
 
+/// The power function.
+///
+/// The power function is defined by `pow(base, exponent) := exp(log(base) * exponent)`.
+/// This function uses the principal log function value to calculate the result.
+/// See ``log(_:)-52em1`` and ``exp(_:)-5wjft`` for more details on the definition.
 public func pow(_ base: Complex<Float>, _ exponent: Complex<Float>) -> Complex<Float> {
     exp(log(base) * exponent)
 }
 
+/// The power function.
+///
+/// The power function is defined by `pow(base, exponent) := exp(log(base) * exponent)`.
+/// This function uses the principal log function value to calculate the result.
+/// See ``log(_:)-3ushm`` and ``exp(_:)-2bq5g`` for more details on the definition.
 public func pow(_ base: Complex<Double>, _ exponent: Complex<Double>) -> Complex<Double> {
     exp(log(base) * exponent)
 }
 
 /// The principal square root of a complex number.
+///
+/// This function is defined by `pow(z, 0.5)`. See ``pow(_:_:)-20qqx`` for the definition of power function.
 public func sqrt(_ z: Complex<Float>) -> Complex<Float>{
     var logged = log(z)
     logged.real /= 2
@@ -105,6 +125,9 @@ public func sqrt(_ z: Complex<Float>) -> Complex<Float>{
     return exp(logged)
 }
 
+/// The principal square root of a complex number.
+///
+/// This function is defined by `pow(z, 0.5)`. See ``pow(_:_:)-1b8gk`` for the definition of power function.
 public func sqrt(_ z: Complex<Double>) -> Complex<Double>{
     var logged = log(z)
     logged.real /= 2

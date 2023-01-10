@@ -14,6 +14,6 @@
 
 ### Parallel Arithmetics
 - ``add(_:_:)-546us``
-- ``substract(_:_:)``
+- ``subtract(_:_:)-2kufu``
 - ``multiply(_:_:)-4koe8``
 

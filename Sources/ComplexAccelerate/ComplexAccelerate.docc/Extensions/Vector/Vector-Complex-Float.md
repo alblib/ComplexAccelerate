@@ -15,14 +15,14 @@ we defined such functions using `vForce` functions.
 - ``Vector/absolute(_:)-1xm7m``
 - ``Vector/negative(_:)-2yqio``
 
-### Parallel Arithmetics Between Complexes
+### Parallel Arithmetics Between Complex Vectors
 - ``Vector/add(_:_:)-7ht90``
 - ``Vector/subtract(_:_:)-fd0u``
 - ``Vector/multiply(_:_:)-3lubu``
-- ``Vector/multiply(conjugate:_:)``
+- ``Vector/multiply(conjugate:_:)-7z2qu``
 - ``Vector/divide(_:_:)-8dqqs``
 
-### Parallel Arithmetics Between Reals and Complexes
+### Parallel Arithmetics between a Real Vector and a Complex Vector
 
 - ``Vector/add(_:_:)-4jlff``
 - ``Vector/add(_:_:)-8yn9h``
@@ -30,3 +30,14 @@ we defined such functions using `vForce` functions.
 - ``Vector/multiply(_:_:)-7qu33``
 - ``Vector/multiply(_:_:)-9zkpc``
 - ``Vector/divide(_:_:)-52plx``
+
+
+### Arithmetics between a Vector and a Scalar
+- ``Vector/add(_:_:)-534zi``
+- ``Vector/add(_:_:)-859n5``
+- ``Vector/subtract(_:_:)-4p2vq``
+- ``Vector/subtract(_:_:)-9l8jo``
+- ``Vector/multiply(_:_:)-6v9pd``
+- ``Vector/multiply(conjugate:_:)-3z389``
+- ``Vector/multiply(_:_:)-6k5we``
+- ``Vector/multiply(_:_:)-2du5r``

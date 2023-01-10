@@ -22,15 +22,3 @@
 
 ### Mathematical Functions
 - <doc:Complex-Functions>
-
-
-### vDSP Pointer for Single Precision
-- ``withDSPComplexPointer(_:)``
-- ``withDSPSplitComplexPointer(_:)``
-- ``withMutableDSPSplitComplexPointer(_:)``
-
-### vDSP Pointer for Double Precision
-- ``withDSPDoubleComplexPointer(_:)``
-- ``withDSPDoubleSplitComplexPointer(_:)``
-- ``withMutableDSPDoubleSplitComplexPointer(_:)``
-
