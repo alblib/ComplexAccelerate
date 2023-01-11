@@ -10,17 +10,13 @@ import Accelerate
 
 
 
-protocol ParallelizableFloatingPoint: BinaryFloatingPoint{}
-extension Float: ParallelizableFloatingPoint{}
-extension Double: ParallelizableFloatingPoint{}
- 
 
 
 protocol GenericComplex{
     associatedtype Real
     var real: Real { get }
     var imag: Real { get }
-    
+    init(real: Real, imag: Real)
 }
 
 extension DSPComplex: GenericComplex{}
@@ -143,6 +139,36 @@ extension AccelerateBuffer where Element: GenericComplex, Element.Real == Double
                 if let baseAddress = floatBuffer.baseAddress{
                     let splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
                     return closure(splitComplex)
+                }else{
+                    return nil
+                }
+            }
+        }
+    }
+}
+
+extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Float{
+    mutating func withDSPSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
+        self.withUnsafeMutableBufferPointer { buffer in
+            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
+                if let baseAddress = floatBuffer.baseAddress{
+                    var splitComplex = DSPSplitComplex.init(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
+                    return closure(&splitComplex)
+                }else{
+                    return nil
+                }
+            }
+        }
+    }
+}
+
+extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Double{
+    mutating func withDSPDoubleSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R? {
+        self.withUnsafeMutableBufferPointer { buffer in
+            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
+                if let baseAddress = floatBuffer.baseAddress{
+                    var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
+                    return closure(&splitComplex)
                 }else{
                     return nil
                 }

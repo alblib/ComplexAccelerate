@@ -13,6 +13,10 @@ public func abs<Real>(_ z: Complex<Real>) -> Real where Real: FloatingPoint{
     z.magnitude
 }
 
+public func conj<Real>(_ z: Complex<Real>) -> Complex<Real> where Real: SignedNumeric{
+    z.conjugate
+}
+
 /// The principal argument of the given complex number, which defined to run in (-𝜋, 𝜋].
 ///
 /// In complex analysis, the argument of a complex number is multi-branch: arg(𝑧) := 2𝜋𝑛𝒊 + Arg(𝑧) for any integer 𝑛.
