@@ -37,7 +37,7 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
     }
     
     static func __zvrv_zv<_ZV, _RV>
-    (   _ vA: _ZV, _ vB: _RV,
+    (   _ vA: _ZV, _ vB: _RV, vAStep: vDSP_Stride = 1, vBStep: vDSP_Stride = 1,
         vDSP_zrv: (_ A: UnsafePointer<DSPSplitComplex>, _ IA: vDSP_Stride,
                    _ B: UnsafePointer<Float>, _ IB: vDSP_Stride,
                    _ Out: UnsafePointer<DSPSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()
@@ -49,7 +49,7 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
             vA.withDSPSplitComplexPointer { splitA in
                 vB.withRealPointer { ptrB in
                     buffer.withDSPSplitComplexPointer { splitO in
-                        vDSP_zrv(splitA, 2, ptrB, 1, splitO, 2, vDSP_Length(count))
+                        vDSP_zrv(splitA, 2 * vAStep, ptrB, vBStep, splitO, 2, vDSP_Length(count))
                     }
                 }
             }
@@ -198,6 +198,14 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
             vDSP_zvphas(A, IA, Out, IOut, N)
         }
     }
+    static func _conj<_ZV>(_ vA: _ZV) -> [Element]
+    where _ZV: AccelerateBuffer, _ZV.Element == Element
+    {
+        __zv_zv(vA) { A, IA, Out, IOut, N in
+            vDSP_zvconj(A, IA, Out, IOut, N)
+        }
+    }
+    
     
     // MARK: Parallel Binary Arithmetic zv + zv -> zv
     
@@ -395,6 +403,21 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
             initializedCount = vA.count
         }
     }
+    
+    
+    // MARK: Binary Arithmetic rv + z -> zv
+    
+    static func _mul<_RV>(_ vA: _RV, scalar: Element) -> [Element]
+    where _RV: AccelerateBuffer, _RV.Element == Element.Real
+    {
+        withUnsafePointer(to: scalar) { scalarPtr in
+            let buffer = UnsafeBufferPointer(start: scalarPtr, count: 1)
+            return __zvrv_zv(buffer, vA, vAStep: 0) { A, IA, B, IB, Out, IOut, N in
+                vDSP_zrvmul(A, IA, B, IB, Out, IOut, N)
+            }
+        }
+    }
+    
     // MARK: Times I
     
     static func _timesI<_ZV>(_ vA: _ZV) -> [Element]
@@ -479,7 +502,7 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
         vA.withDSPSplitComplex { splitComplex in
             vDSP_rmsqv(splitComplex.realp, 1, &result, vDSP_Length(2 * vA.count))
         }
-        return sqrt(Element.Real(2)) * result
+        return Foundation.sqrt(Element.Real(2)) * result
     }
     
     // MARK: Dot Product
@@ -635,11 +658,27 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
     {
         _exp(_mul(_log(bases), scalar: exponent))
     }
+    static func _pow<_RV>(bases: _RV, exponent: Element) -> [Element]
+    where _RV: AccelerateBuffer, _RV.Element == Element.Real
+    {
+        return _exp(_mul(vForce.log(bases), scalar: exponent))
+    }
     
     static func _pow<_ZV>(base: Element, exponents: _ZV) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
         let logBase = Element(real: Foundation.log(base.real * base.real + base.imag * base.imag) / 2, imag: atan2(base.imag, base.real))
+        return _exp(_mul(exponents, scalar: logBase))
+    }
+    static func _pow<_ZV>(base: Element.Real, exponents: _ZV) -> [Element]
+    where _ZV: AccelerateBuffer, _ZV.Element == Element
+    {
+        return _exp(_mul(exponents, scalar: Foundation.logf(base)))
+    }
+    static func _pow<_RV>(base: Element, exponents: _RV) -> [Element]
+    where _RV: AccelerateBuffer, _RV.Element == Element.Real
+    {
+        let logBase = Element(real: Foundation.log(base.real * base.real + base.imag * base.imag) / 2, imag: Foundation.atan2f(base.imag, base.real))
         return _exp(_mul(exponents, scalar: logBase))
     }
     

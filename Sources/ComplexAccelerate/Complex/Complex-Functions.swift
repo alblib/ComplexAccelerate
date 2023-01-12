@@ -62,7 +62,7 @@ public func log(_ z: Complex<Float>) -> Complex<Float>{
 /// - Parameter z: A complex number.
 /// - Returns: The principal logarithm of the given complex number: Ln(𝑧) := ln|𝑧| + 𝒊 Arg(𝑧).
 public func log(_ z: Complex<Double>) -> Complex<Double>{
-    Complex<Double>(real: log(abs(z)), imag: arg(z))
+    Complex<Double>(real: Foundation.log(abs(z)), imag: arg(z))
 }
 
 /// The complex natural exponential function.

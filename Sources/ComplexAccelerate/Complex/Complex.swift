@@ -225,4 +225,7 @@ extension Complex where Real: FloatingPoint{ // divisable
     public static func /= (lhs: inout Complex<Real>, rhs: Complex<Real>){
         lhs = lhs / rhs
     }
+    public var isZero: Bool{
+        real.isZero && imag.isZero
+    }
 }

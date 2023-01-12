@@ -11,6 +11,7 @@ Basic mathematical and transcendental functions on single precision complex numb
 ### Complex Analysis
 
 - ``abs(_:)``
+- ``conj(_:)``
 - ``arg(_:)-275qb``
 - ``arg(_:)-1rv27``
 - ``exp(_:)-5wjft``
