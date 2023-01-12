@@ -96,25 +96,23 @@ extension GenericComplex where Real == Double{
 extension AccelerateBuffer where Element: GenericComplex, Element.Real == Float{
     func withDSPSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPSplitComplex.init(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                var splitComplex = DSPSplitComplex(realp: .init(mutating: pointer), imagp: .init(mutating: pointer + 1))
+                return closure(&splitComplex)
             }
         }
     }
     func withDSPSplitComplex<R>(_ closure: (_ splitComplex: DSPSplitComplex) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    let splitComplex = DSPSplitComplex.init(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                let splitComplex = DSPSplitComplex(realp: .init(mutating: pointer), imagp: .init(mutating: pointer + 1))
+                return closure(splitComplex)
             }
         }
     }
@@ -123,25 +121,23 @@ extension AccelerateBuffer where Element: GenericComplex, Element.Real == Float{
 extension AccelerateBuffer where Element: GenericComplex, Element.Real == Double{
     func withDSPDoubleSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: pointer), imagp: .init(mutating: pointer + 1))
+                return closure(&splitComplex)
             }
         }
     }
     func withDSPDoubleSplitComplex<R>(_ closure: (_ splitComplex: DSPDoubleSplitComplex) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    let splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                let splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: pointer), imagp: .init(mutating: pointer + 1))
+                return closure(splitComplex)
             }
         }
     }
@@ -150,13 +146,12 @@ extension AccelerateBuffer where Element: GenericComplex, Element.Real == Double
 extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Float{
     mutating func withDSPSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
         self.withUnsafeMutableBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPSplitComplex.init(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                var splitComplex = DSPSplitComplex(realp: pointer, imagp: pointer + 1)
+                return closure(&splitComplex)
             }
         }
     }
@@ -165,13 +160,12 @@ extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real ==
 extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Double{
     mutating func withDSPDoubleSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R? {
         self.withUnsafeMutableBufferPointer { buffer in
-            buffer.withMemoryRebound(to: Element.Real.self) { floatBuffer in
-                if let baseAddress = floatBuffer.baseAddress{
-                    var splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: baseAddress), imagp: .init(mutating: baseAddress + 1))
-                    return closure(&splitComplex)
-                }else{
-                    return nil
-                }
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                var splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
+                return closure(&splitComplex)
             }
         }
     }
