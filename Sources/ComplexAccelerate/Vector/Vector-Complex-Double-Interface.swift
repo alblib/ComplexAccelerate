@@ -20,6 +20,45 @@ public extension Vector where Element == Complex<Double>{
         }
         return _merge(reals: vector, imaginaries: imags)
     }
+    static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [Complex<Double>]
+    where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Double, RealVectorB.Element == Double
+    {
+        return _merge(reals: reals, imaginaries: imaginaries)
+    }
+    static func create(repeating: Complex<Double>, count: Int) -> [Complex<Double>]
+    {
+        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            buffer.withDSPDoubleSplitComplexPointer { outPtr in
+                repeating.withDSPDoubleSplitComplexPointer { repeatingPtr in
+                    vDSP_zvfillD(repeatingPtr, outPtr, 2, vDSP_Length(count))
+                }
+            }
+            initializedCount = count
+        }
+    }
+    static func create(initialValue: Complex<Double>, increment: Complex<Double>, count: Int) -> [Complex<Double>]
+    {
+       _ramp(initialValue: initialValue, increment: increment, count: count)
+    }
+    static func create(initialValue: Complex<Double>, multiplyingBy factor: Complex<Double>, count: Int) -> [Complex<Double>]
+    {
+        _ramp(initialValue: initialValue, multiple: factor, count: count)
+    }
+    static func realsAndImaginaries<ComplexVector>(_ vector: ComplexVector) -> (reals: [Double], imaginaries: [Double])
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector)
+    }
+    static func reals<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector).reals
+    }
+    static func imaginaries<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector).imaginaries
+    }
 }
 
 public extension Vector where Element == DSPDoubleComplex{
@@ -31,6 +70,45 @@ public extension Vector where Element == DSPDoubleComplex{
             initializedCount = vector.count
         }
         return _merge(reals: vector, imaginaries: imags)
+    }
+    static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [DSPDoubleComplex]
+    where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Double, RealVectorB.Element == Double
+    {
+        return _merge(reals: reals, imaginaries: imaginaries)
+    }
+    static func create(repeating: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    {
+        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            buffer.withDSPDoubleSplitComplexPointer { outPtr in
+                repeating.withDSPDoubleSplitComplexPointer { repeatingPtr in
+                    vDSP_zvfillD(repeatingPtr, outPtr, 2, vDSP_Length(count))
+                }
+            }
+            initializedCount = count
+        }
+    }
+    static func create(initialValue: DSPDoubleComplex, increment: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    {
+        _ramp(initialValue: initialValue, increment: increment, count: count)
+    }
+    static func create(initialValue: DSPDoubleComplex, multiplyingBy factor: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    {
+        _ramp(initialValue: initialValue, multiple: factor, count: count)
+    }
+    static func realsAndImaginaries<ComplexVector>(_ vector: ComplexVector) -> (reals: [Double], imaginaries: [Double])
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector)
+    }
+    static func reals<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector).reals
+    }
+    static func imaginaries<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
+    {
+        return _split(vector).imaginaries
     }
 }
 

@@ -822,3 +822,40 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         _timesI(_acoth(_timesI(vA)))
     }
 }
+
+// MARK: - Create Array
+
+
+extension Vector where Element: GenericComplex, Element.Real == Double{
+    
+    static func _ramp(initialValue: Element, increment: Element, count: Int) -> [Element]
+    {
+        if count <= 0{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { obuffer, initializedCount in
+            obuffer.withDSPDoubleSplitComplex { oSplitComplex in
+                withUnsafePointer(to: initialValue.real) { iRealPtr in
+                    withUnsafePointer(to: increment.real) { incRealPtr in
+                        vDSP_vrampD(iRealPtr, incRealPtr, oSplitComplex.realp, 2, vDSP_Length(count))
+                    }
+                }
+                withUnsafePointer(to: initialValue.imag) { iImagPtr in
+                    withUnsafePointer(to: increment.imag) { incImagPtr in
+                        vDSP_vrampD(iImagPtr, incImagPtr, oSplitComplex.realp, 2, vDSP_Length(count))
+                    }
+                }
+            }
+            initializedCount = count
+        }
+    }
+    
+    static func _ramp(initialValue: Element, multiple: Element, count: Int) -> [Element]
+    {
+        let ln_init = Element(real: Foundation.log(initialValue.real * initialValue.real + initialValue.imag * initialValue.imag) / 2,
+                            imag: Foundation.atan2(initialValue.imag, initialValue.real))
+        let ln_mul = Element(real: Foundation.log(multiple.real * multiple.real + multiple.imag * multiple.imag) / 2,
+                            imag: Foundation.atan2(multiple.imag, multiple.real))
+        return _exp(_ramp(initialValue: ln_init, increment: ln_mul, count: count))
+    }
+}

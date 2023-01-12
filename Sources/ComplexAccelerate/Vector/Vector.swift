@@ -65,12 +65,44 @@ public extension Vector where Element: AdditiveArithmetic{
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         loop(vectorA, vectorB) { $0 - $1 }
     }
+    static func create(initialValue: Element, increment: Element, count: Int) -> [Element]{
+        if count <= 0{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            var val = initialValue
+            var ptr = buffer.baseAddress!
+            ptr.initialize(to: val)
+            for _ in 1..<count{
+                ptr += 1
+                val += increment
+                ptr.initialize(to: val)
+            }
+            initializedCount = count
+        }
+    }
 }
 
 public extension Vector where Element: Numeric{
     static func multiply<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         loop(vectorA, vectorB) { $0 * $1 }
+    }
+    static func create(initialValue: Element, multiplyingBy factor: Element, count: Int) -> [Element]{
+        if count <= 0{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            var val = initialValue
+            var ptr = buffer.baseAddress!
+            ptr.initialize(to: val)
+            for _ in 1..<count{
+                ptr += 1
+                val *= factor
+                ptr.initialize(to: val)
+            }
+            initializedCount = count
+        }
     }
 }
 
