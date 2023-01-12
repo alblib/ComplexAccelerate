@@ -98,43 +98,43 @@ public extension Vector where Element == Double{
     // MARK: Arithmetic between scalars
     
     @inline(__always)
-    static func add<VectorA>(_ vector: VectorA, scalar: Double) -> [Double]
+    static func add<VectorA>(_ vector: VectorA, _ scalar: Double) -> [Double]
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vDSP.add(scalar, vector)
     }
     @inline(__always)
-    static func add<VectorA>(scalar: Double, _ vector: VectorA) -> [Double]
+    static func add<VectorA>(_ scalar: Double, _ vector: VectorA) -> [Double]
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vDSP.add(scalar, vector)
     }
     
     @inline(__always)
-    static func subtract<VectorA>(_ vector: VectorA, scalar: Double) -> [Double]
+    static func subtract<VectorA>(_ vector: VectorA, _ scalar: Double) -> [Double]
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vDSP.add(-scalar, vector)
     }
     @inline(__always)
-    static func subtract<VectorB>(scalar: Double, _ vector: VectorB) -> [Double]
+    static func subtract<VectorB>(_ scalar: Double, _ vector: VectorB) -> [Double]
     where VectorB: AccelerateBuffer, VectorB.Element == Element{
         vDSP.add(scalar, vDSP.negative(vector))
     }
     @inline(__always)
-    static func multiply<VectorA>(_ vector: VectorA, scalar: Double) -> [Double]
+    static func multiply<VectorA>(_ vector: VectorA, _ scalar: Double) -> [Double]
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vDSP.multiply(scalar, vector)
     }
     @inline(__always)
-    static func multiply<VectorB>(scalar: Double, _ vector: VectorB) -> [Double]
+    static func multiply<VectorB>(_ scalar: Double, _ vector: VectorB) -> [Double]
     where VectorB: AccelerateBuffer, VectorB.Element == Element{
         vDSP.multiply(scalar, vector)
     }
     @inline(__always)
-    static func divide<VectorA>(_ vector: VectorA, scalar: Double) -> [Double]
+    static func divide<VectorA>(_ vector: VectorA, _ scalar: Double) -> [Double]
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vDSP.divide(vector, scalar)
     }
     @inline(__always)
-    static func divide<VectorB>(scalar: Double, _ vector: VectorB) -> [Double]
+    static func divide<VectorB>(_ scalar: Double, _ vector: VectorB) -> [Double]
     where VectorB: AccelerateBuffer, VectorB.Element == Element{
         vDSP.divide(scalar, vector)
     }

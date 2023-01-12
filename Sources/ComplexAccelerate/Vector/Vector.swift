@@ -10,7 +10,7 @@ import Accelerate
 
 public enum Vector<Element>{
     
-    static func loop<VectorA>(_ vector: VectorA, operation: (Element) -> Element ) -> [Element]
+    internal static func loop<VectorA>(_ vector: VectorA, operation: (Element) -> Element ) -> [Element]
     where VectorA: AccelerateBuffer, VectorA.Element == Element
     {
         let count = vector.count
@@ -29,7 +29,7 @@ public enum Vector<Element>{
             return []
         }
     }
-    static func loop<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB, operation: (Element, Element) -> Element ) -> [Element]
+    internal static func loop<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB, operation: (Element, Element) -> Element ) -> [Element]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element
     {
         let count = min(vectorA.count, vectorB.count)

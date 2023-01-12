@@ -7,6 +7,12 @@
 - <doc:Vector-Float>
 - <doc:Vector-Double>
 - <doc:Vector-Complex-Float>
+- <doc:Vector-Complex-Double>
+- <doc:Vector-DSPDoubleComplex>
+
+### Vector Creation
+- ``arithmeticProgression(initialValue:increment:count:)-7krbs``
+- ``geometricProgression(initialValue:ratio:count:)-3b7o``
 
 ### Absolute and Negation Functions
 - ``negative(_:)-854eb``

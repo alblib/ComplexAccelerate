@@ -191,7 +191,7 @@ public extension Vector where Element == DSPDoubleComplex
     {
         _mul(vectorA, vectorB)
     }
-    static func multiply<ComplexVectorA, ComplexVectorB>(conj vectorA: ComplexVectorA, _ vectorB: ComplexVectorB) -> [DSPDoubleComplex]
+    static func multiply<ComplexVectorA, ComplexVectorB>(conjugate vectorA: ComplexVectorA, _ vectorB: ComplexVectorB) -> [DSPDoubleComplex]
     where ComplexVectorA: AccelerateBuffer, ComplexVectorB: AccelerateBuffer,
           ComplexVectorA.Element == DSPDoubleComplex, ComplexVectorB.Element == DSPDoubleComplex
     {
