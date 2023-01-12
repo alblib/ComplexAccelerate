@@ -16,14 +16,13 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
     // MARK: Binary Operations
     
     static func __zvzv_zv<_ZV, __ZV>
-    (   _ vA: _ZV, _ vB: __ZV, vAStep: vDSP_Stride = 1, vBStep: vDSP_Stride = 1,
+    (   _ vA: _ZV, _ vB: __ZV, vAStep: vDSP_Stride = 1, vBStep: vDSP_Stride = 1, count: Int,
         vDSP_zv: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride,
                   _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride,
                   _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()
     ) -> [Element]
     where _ZV: AccelerateBuffer, __ZV: AccelerateBuffer, _ZV.Element == Element, __ZV.Element == Element
     {
-        let count = min(vA.count, vB.count)
         return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             vA.withDSPDoubleSplitComplexPointer { splitA in
                 vB.withDSPDoubleSplitComplexPointer { splitB in
@@ -35,6 +34,46 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
             initializedCount = count
         }
     }
+    
+    static func __zvzv_zv<_ZV, __ZV>
+    (   _ vA: _ZV, _ vB: __ZV,
+        vDSP_zv: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride,
+                  _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride,
+                  _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()
+    ) -> [Element]
+    where _ZV: AccelerateBuffer, __ZV: AccelerateBuffer, _ZV.Element == Element, __ZV.Element == Element
+    {
+        return __zvzv_zv(vA, vB, count: min(vA.count, vB.count), vDSP_zv: vDSP_zv)
+    }
+    
+    static func __zvzs_zv<_ZV>
+    (   _ vA: _ZV, _ sB: Element,
+        vDSP_zv: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride,
+                  _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride,
+                  _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()
+    ) -> [Element]
+    where _ZV: AccelerateBuffer, _ZV.Element == Element
+    {
+        withUnsafePointer(to: sB) { sBPtr in
+            let BBuf = UnsafeBufferPointer(start: sBPtr, count: 1)
+            return __zvzv_zv(vA, BBuf, vBStep: 0, count: vA.count, vDSP_zv: vDSP_zv)
+        }
+    }
+    
+    static func __zszv_zv<_ZV>
+    (   _ sA: Element, _ vB: _ZV,
+        vDSP_zv: (_ A: UnsafePointer<DSPDoubleSplitComplex>, _ IA: vDSP_Stride,
+                  _ B: UnsafePointer<DSPDoubleSplitComplex>, _ IB: vDSP_Stride,
+                  _ Out: UnsafePointer<DSPDoubleSplitComplex>, _ IOut: vDSP_Stride, _ N: vDSP_Length) -> ()
+    ) -> [Element]
+    where _ZV: AccelerateBuffer, _ZV.Element == Element
+    {
+        withUnsafePointer(to: sA) { sAPtr in
+            let ABuf = UnsafeBufferPointer(start: sAPtr, count: 1)
+            return __zvzv_zv(ABuf, vB, vAStep: 0, count: vB.count, vDSP_zv: vDSP_zv)
+        }
+    }
+    
     
     static func __zvrv_zv<_ZV, _RV>
     (   _ vA: _ZV, _ vB: _RV, vAStep: vDSP_Stride = 1, vBStep: vDSP_Stride = 1,
@@ -287,76 +326,55 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
     static func _add<_ZV>(_ vA: _ZV, scalar: Element) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sB = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(vA, sB, vBStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvaddD(A, IA, B, IB, Out, IOut, N)
-            }
+        __zvzs_zv(vA, scalar) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvaddD(A, IA, B, IB, Out, IOut, N)
         }
     }
     
     static func _sub<_ZV>(_ vA: _ZV, scalar: Element) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sB = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(vA, sB, vBStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvsubD(A, IA, B, IB, Out, IOut, N)
-            }
+        __zvzs_zv(vA, scalar) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvsubD(A, IA, B, IB, Out, IOut, N)
         }
     }
     static func _sub<_ZV>(scalar: Element, _ vB: _ZV) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sA = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(sA, vB, vAStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvsubD(A, IA, B, IB, Out, IOut, N)
-            }
+        __zszv_zv(scalar, vB) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvsubD(A, IA, B, IB, Out, IOut, N)
         }
     }
     
     static func _mul<_ZV>(_ vA: _ZV, scalar: Element) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sB = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(vA, sB, vBStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, 1)
-            }
+        __zvzs_zv(vA, scalar) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, 1)
         }
     }
     
     static func _mul<_ZV>(conj vA: _ZV, scalar: Element) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sB = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(vA, sB, vBStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, -1)
-            }
+        __zvzs_zv(vA, scalar) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvmulD(A, IA, B, IB, Out, IOut, N, -1)
         }
     }
     
     static func _div<_ZV>(_ vA: _ZV, scalar: Element) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sB = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(vA, sB, vBStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvdivD(B, IB, A, IA, Out, IOut, N)
-            }
+        __zvzs_zv(vA, scalar) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvdivD(B, IB, A, IA, Out, IOut, N)
         }
     }
     
     static func _div<_ZV>(scalar: Element, _ vB: _ZV) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
-        withUnsafePointer(to: scalar) { sPtr in
-            let sA = UnsafeBufferPointer(start: sPtr, count: 1)
-            return __zvzv_zv(sA, vB, vAStep: 0) { A, IA, B, IB, Out, IOut, N in
-                vDSP_zvdivD(B, IB, A, IA, Out, IOut, N)
-            }
+        __zszv_zv(scalar, vB) { A, IA, B, IB, Out, IOut, N in
+            vDSP_zvdivD(B, IB, A, IA, Out, IOut, N)
         }
     }
     
@@ -372,8 +390,14 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         let doubleCount = 2 * count
         return [Element](unsafeUninitializedCapacity: vA.count) { buffer, initializedCount in
             vA.withUnsafeBufferPointer { numeratorComplexBuffer in
-                numeratorComplexBuffer.baseAddress!.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { numeratorFloatPtr in
-                    buffer.baseAddress!.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { outputFloatPtr in
+                guard let numeratorPtr = numeratorComplexBuffer.baseAddress else{
+                    return
+                }
+                numeratorPtr.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { numeratorFloatPtr in
+                    guard let outputPtr = buffer.baseAddress else{
+                        return
+                    }
+                    outputPtr.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { outputFloatPtr in
                         withUnsafePointer(to: scalar) { denominatorPtr in
                             vDSP_vsmulD(numeratorFloatPtr, 1, denominatorPtr, outputFloatPtr, 1, vDSP_Length(doubleCount))
                         }
@@ -394,8 +418,14 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         let doubleCount = 2 * count
         return [Element](unsafeUninitializedCapacity: vA.count) { buffer, initializedCount in
             vA.withUnsafeBufferPointer { numeratorComplexBuffer in
-                numeratorComplexBuffer.baseAddress!.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { numeratorFloatPtr in
-                    buffer.baseAddress!.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { outputFloatPtr in
+                guard let numeratorPtr = numeratorComplexBuffer.baseAddress else{
+                    return
+                }
+                numeratorPtr.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { numeratorFloatPtr in
+                    guard let outputPtr = buffer.baseAddress else{
+                        return
+                    }
+                    outputPtr.withMemoryRebound(to: Element.Real.self, capacity: doubleCount) { outputFloatPtr in
                         withUnsafePointer(to: scalar) { denominatorPtr in
                             vDSP_vsdivD(numeratorFloatPtr, 1, denominatorPtr, outputFloatPtr, 1, vDSP_Length(doubleCount))
                         }
@@ -660,6 +690,7 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
     {
         _exp(_mul(_log(bases), scalar: exponent))
     }
+    
     static func _pow<_RV>(bases: _RV, exponent: Element) -> [Element]
     where _RV: AccelerateBuffer, _RV.Element == Element.Real
     {
@@ -672,6 +703,7 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         let logBase = Element(real: Foundation.log(base.real * base.real + base.imag * base.imag) / 2, imag: atan2(base.imag, base.real))
         return _exp(_mul(exponents, scalar: logBase))
     }
+    
     static func _pow<_ZV>(base: Element.Real, exponents: _ZV) -> [Element]
     where _ZV: AccelerateBuffer, _ZV.Element == Element
     {
