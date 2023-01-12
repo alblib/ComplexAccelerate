@@ -36,13 +36,21 @@ public extension Vector where Element == Complex<Double>{
             initializedCount = count
         }
     }
-    static func create(initialValue: Complex<Double>, increment: Complex<Double>, count: Int) -> [Complex<Double>]
+    static func arithmeticProgression(initialValue: Complex<Double>, increment: Complex<Double>, count: Int) -> [Complex<Double>]
     {
-       _ramp(initialValue: initialValue, increment: increment, count: count)
+        _ramp(begin: initialValue, increment: increment, count: count)
     }
-    static func create(initialValue: Complex<Double>, multiplyingBy factor: Complex<Double>, count: Int) -> [Complex<Double>]
+    static func arithmeticProgression(initialValue: Complex<Double>, to finalValue: Complex<Double>, count: Int) -> [Complex<Double>]
     {
-        _ramp(initialValue: initialValue, multiple: factor, count: count)
+        _ramp(begin: initialValue, end: finalValue, count: count)
+    }
+    static func geometricProgression(initialValue: Complex<Double>, ratio: Complex<Double>, count: Int) -> [Complex<Double>]
+    {
+        _rampGeo(begin: initialValue, multiple: ratio, count: count)
+    }
+    static func geometricProgression(initialValue: Complex<Double>, to finalValue: Complex<Double>, count: Int) -> [Complex<Double>]
+    {
+        _rampGeo(begin: initialValue, end: finalValue, count: count)
     }
     static func realsAndImaginaries<ComplexVector>(_ vector: ComplexVector) -> (reals: [Double], imaginaries: [Double])
     where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element
@@ -87,13 +95,21 @@ public extension Vector where Element == DSPDoubleComplex{
             initializedCount = count
         }
     }
-    static func create(initialValue: DSPDoubleComplex, increment: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    static func arithmeticProgression(initialValue: DSPDoubleComplex, increment: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
     {
-        _ramp(initialValue: initialValue, increment: increment, count: count)
+        _ramp(begin: initialValue, increment: increment, count: count)
     }
-    static func create(initialValue: DSPDoubleComplex, multiplyingBy factor: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    static func arithmeticProgression(initialValue: DSPDoubleComplex, to finalValue: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
     {
-        _ramp(initialValue: initialValue, multiple: factor, count: count)
+        _ramp(begin: initialValue, end: finalValue, count: count)
+    }
+    static func geometricProgression(initialValue: DSPDoubleComplex, ratio: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    {
+        _rampGeo(begin: initialValue, multiple: ratio, count: count)
+    }
+    static func geometricProgression(initialValue: DSPDoubleComplex, to finalValue: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
+    {
+        _rampGeo(begin: initialValue, end: finalValue, count: count)
     }
     static func realsAndImaginaries<ComplexVector>(_ vector: ComplexVector) -> (reals: [Double], imaginaries: [Double])
     where ComplexVector: AccelerateBuffer, ComplexVector.Element == Element

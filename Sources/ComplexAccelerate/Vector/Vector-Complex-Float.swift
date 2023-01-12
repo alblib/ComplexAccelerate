@@ -83,8 +83,7 @@ public extension Vector where Element == Complex<Float>{
             } ?? []
         } ?? []
     }
-    
-    
+        
     // MARK: Parallel Arithmetic
     
     static func add<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Complex<Float>]

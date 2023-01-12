@@ -822,3 +822,55 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
         _timesI(_acoth(_timesI(vA)))
     }
 }
+
+// MARK: - Create Array
+
+
+extension Vector where Element: GenericComplex, Element.Real == Float{
+    
+    static func _ramp(begin: Element, increment: Element, count: Int) -> [Element]
+    {
+        if count <= 0{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { obuffer, initializedCount in
+            obuffer.withDSPSplitComplex { oSplitComplex in
+                withUnsafePointer(to: begin.real) { iRealPtr in
+                    withUnsafePointer(to: increment.real) { incRealPtr in
+                        vDSP_vramp(iRealPtr, incRealPtr, oSplitComplex.realp, 2, vDSP_Length(count))
+                    }
+                }
+                withUnsafePointer(to: begin.imag) { iImagPtr in
+                    withUnsafePointer(to: increment.imag) { incImagPtr in
+                        vDSP_vramp(iImagPtr, incImagPtr, oSplitComplex.realp, 2, vDSP_Length(count))
+                    }
+                }
+            }
+            initializedCount = count
+        }
+    }
+    
+    static func _ramp(begin: Element, end: Element, count: Int) -> [Element]
+    {
+        let step = Element(real: (end.real - begin.real) / Float(count - 1),
+                           imag: (end.imag - begin.imag) / Float(count - 1))
+        return _ramp(begin: begin, increment: step, count: count)
+    }
+    
+    static func _rampGeo(begin: Element, multiple: Element, count: Int) -> [Element]
+    {
+        let ln_init = Element(real: Foundation.log(begin.real * begin.real + begin.imag * begin.imag) / 2,
+                            imag: Foundation.atan2(begin.imag, begin.real))
+        let ln_mul = Element(real: Foundation.log(multiple.real * multiple.real + multiple.imag * multiple.imag) / 2,
+                            imag: Foundation.atan2(multiple.imag, multiple.real))
+        return _exp(_ramp(begin: ln_init, increment: ln_mul, count: count))
+    }
+    static func _rampGeo(begin: Element, end: Element, count: Int) -> [Element]
+    {
+        let ln_init = Element(real: Foundation.log(begin.real * begin.real + begin.imag * begin.imag) / 2,
+                            imag: Foundation.atan2(begin.imag, begin.real))
+        let ln_end = Element(real: Foundation.log(end.real * end.real + end.imag * end.imag) / 2,
+                            imag: Foundation.atan2(end.imag, end.real))
+        return _exp(_ramp(begin: ln_init, end: ln_end, count: count))
+    }
+}

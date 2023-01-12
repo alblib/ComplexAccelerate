@@ -8,9 +8,45 @@
 import Foundation
 import Accelerate
 
-// MARK: Parallel Arithmetics
 
 public extension Vector where Element == Float{
+    
+    // MARK: Create Vector
+    
+    static func create(repeating: Float, count: Int) -> [Float]
+    {
+        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard let oPtr = buffer.baseAddress else{
+                return
+            }
+            withUnsafePointer(to: repeating) { iPtr in
+                vDSP_vfill(iPtr, oPtr, 1, vDSP_Length(count))
+            }
+            initializedCount = count
+        }
+    }
+    static func arithmeticProgression(initialValue: Float, increment: Float, count: Int) -> [Float]
+    {
+        if count <= 0{
+            return []
+        }
+        return vDSP.ramp(withInitialValue: initialValue, increment: increment, count: count)
+    }
+    static func arithmeticProgression(initialValue: Float, to finalValue: Float, count: Int) -> [Float]
+    {
+        arithmeticProgression(initialValue: initialValue, increment: (finalValue - initialValue) / Float(count - 1), count: count)
+    }
+    static func geometricProgression(initialValue: Float, ratio: Float, count: Int) -> [Float]
+    {
+        vForce.exp(vDSP.ramp(withInitialValue: Foundation.log(initialValue), increment: Foundation.log(ratio), count: count))
+    }
+    static func geometricProgression(initialValue: Float, to finalValue: Float, count: Int) -> [Float]
+    {
+        vForce.exp(arithmeticProgression(initialValue: Foundation.log(initialValue), to: Foundation.log(finalValue), count: count))
+    }
+    
+    // MARK: - Parallel Arithmetics
+    
     internal static func parallel<VectorA, VectorB, R>(_ vectorA: VectorA, _ vectorB: VectorB, operation: (UnsafeBufferPointer<Float>, UnsafeBufferPointer<Float>) -> R) -> R
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         let count = min(vectorA.count, vectorB.count)
