@@ -575,15 +575,15 @@ public extension Vector where Element == Complex<Double>{
     }
     
     static func dot<ComplexVector, RealVector>
-    (_ vectorA: ComplexVector, vectorB: RealVector) -> Complex<Double>
+    (_ vectorA: ComplexVector, _ vectorB: RealVector) -> Complex<Double>
     where ComplexVector: AccelerateBuffer, RealVector: AccelerateBuffer,
           ComplexVector.Element == Complex<Double>, RealVector.Element == Double
     {
         _dot(vectorA, vectorB)
     }
     
-    static func dot<ComplexVector, RealVector>
-    (_ vectorA: RealVector, vectorB: ComplexVector) -> Complex<Double>
+    static func dot<RealVector, ComplexVector>
+    (_ vectorA: RealVector, _ vectorB: ComplexVector) -> Complex<Double>
     where ComplexVector: AccelerateBuffer, RealVector: AccelerateBuffer,
           ComplexVector.Element == Complex<Double>, RealVector.Element == Double
     {
@@ -617,15 +617,15 @@ public extension Vector where Element == DSPDoubleComplex{
     }
     
     static func dot<ComplexVector, RealVector>
-    (_ vectorA: ComplexVector, vectorB: RealVector) -> DSPDoubleComplex
+    (_ vectorA: ComplexVector, _ vectorB: RealVector) -> DSPDoubleComplex
     where ComplexVector: AccelerateBuffer, RealVector: AccelerateBuffer,
           ComplexVector.Element == DSPDoubleComplex, RealVector.Element == Double
     {
         _dot(vectorA, vectorB)
     }
     
-    static func dot<ComplexVector, RealVector>
-    (_ vectorA: RealVector, vectorB: ComplexVector) -> DSPDoubleComplex
+    static func dot<RealVector, ComplexVector>
+    (_ vectorA: RealVector, _ vectorB: ComplexVector) -> DSPDoubleComplex
     where ComplexVector: AccelerateBuffer, RealVector: AccelerateBuffer,
           ComplexVector.Element == DSPDoubleComplex, RealVector.Element == Double
     {

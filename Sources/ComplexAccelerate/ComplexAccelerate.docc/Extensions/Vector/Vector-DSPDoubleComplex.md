@@ -1,4 +1,4 @@
-#  Vector<DPSDoubleComplex>
+#  Vector<DSPDoubleComplex>
 Parallel operation specialization on complex numbers when `Element` is `DSPDoubleComplex`.
 
 ## Overview
@@ -12,6 +12,7 @@ we defined such functions using `vForce` functions.
 ## Topics
 
 ### Vector Creation
+- ``Vector/castToComplexes(_:)-1vtim``
 - ``Vector/create(reals:imaginaries:)-8zz6p``
 - ``Vector/create(repeating:count:)-21jot``
 - ``Vector/arithmeticProgression(initialValue:increment:count:)-9jshe``
@@ -44,6 +45,7 @@ we defined such functions using `vForce` functions.
 - ``Vector/multiply(_:_:)-27lkp``
 - ``Vector/multiply(conjugate:_:)-4trah``
 - ``Vector/multiply(conjugate:_:)-43svn``
+- ``Vector/multiply(_:conjugate:)-5jaka``
 - ``Vector/multiply(_:conjugate:)-1vxqw``
 - ``Vector/divide(_:_:)-516zg``
 - ``Vector/divide(_:_:)-9w2st``
@@ -52,7 +54,7 @@ we defined such functions using `vForce` functions.
 
 ### Vector-Scalar Parallel Arithmetics
 - ``Vector/add(_:_:)-73aip``
-- ``Vector/add(_:_:)-73aip``
+- ``Vector/add(_:_:)-4rj64``
 - ``Vector/add(_:_:)-17kgo``
 - ``Vector/add(_:_:)-3t6qk``
 - ``Vector/subtract(_:_:)-2d1fo``
@@ -70,11 +72,19 @@ we defined such functions using `vForce` functions.
 - ``Vector/divide(_:_:)-20htt``
 - ``Vector/divide(_:_:)-4tzs2``
 
+### Vector Reduction
+- ``Vector/dot(_:_:)-7wxun``
+- ``Vector/dot(_:_:)-wkc6``
+- ``Vector/dot(_:_:)-5p19i``
+- ``Vector/dot(conjugate:_:)-37ivi``
+- ``Vector/dot(_:conjugate:)-8pcln``
+
 ### Logarithms and Powers
 - ``Vector/log(_:)-23025``
 - ``Vector/exp(_:)-5wd4``
 - ``Vector/expi(_:)-7adfa``
 - ``Vector/expi(_:)-3lb1y``
+- ``Vector/sqrt(_:)-8zxt6``
 - ``Vector/pow(bases:exponents:)-1b01z``
 - ``Vector/pow(bases:exponents:)-6t178``
 - ``Vector/pow(bases:exponents:)-3zsea``

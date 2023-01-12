@@ -7,6 +7,7 @@
 - <doc:Vector-Float>
 - <doc:Vector-Double>
 - <doc:Vector-Complex-Float>
+- <doc:Vector-DSPComplex>
 - <doc:Vector-Complex-Double>
 - <doc:Vector-DSPDoubleComplex>
 

@@ -65,7 +65,7 @@ This is introduced to implement the general parallel operation structure ``Vecto
 - ``Vector/asin(_:)-3pg1g``
 - ``Vector/acos(_:)-5znea``
 - ``Vector/atan(_:)-1no2p``
-- ``Vector/acoth(_:)-6ah6f``
+- ``Vector/acot(_:)-13ggy``
 
 ### Hyperbolic Functions
 - ``Vector/cosh(_:)-616jj``

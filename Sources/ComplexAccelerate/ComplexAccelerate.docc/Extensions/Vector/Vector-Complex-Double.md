@@ -12,6 +12,7 @@ we defined such functions using `vForce` functions.
 ## Topics
 
 ### Vector Creation
+- ``Vector/castToComplexes(_:)-3trsj``
 - ``Vector/create(reals:imaginaries:)-2t51g``
 - ``Vector/create(repeating:count:)-5jl1j``
 - ``Vector/arithmeticProgression(initialValue:increment:count:)-9bp8v``
@@ -21,10 +22,10 @@ we defined such functions using `vForce` functions.
 
 ### Components and Absolute Values
 
-- ``Vector/negative(_:)-2yqio``
+- ``Vector/negative(_:)-x3ow``
 - ``Vector/conjugate(_:)-7kdlg``
 
-- ``Vector/absolute(_:)-1xm7m``
+- ``Vector/absolute(_:)-9p35e``
 - ``Vector/phase(_:)-3j4n4``
 
 - ``Vector/realsAndImaginaries(_:)-1ykv1``
@@ -44,6 +45,7 @@ we defined such functions using `vForce` functions.
 - ``Vector/multiply(_:_:)-85bmt``
 - ``Vector/multiply(conjugate:_:)-8f2z9``
 - ``Vector/multiply(conjugate:_:)-4r6vf``
+- ``Vector/multiply(_:conjugate:)-5r4as``
 - ``Vector/multiply(_:conjugate:)-60uq6``
 - ``Vector/divide(_:_:)-5eko8``
 - ``Vector/divide(_:_:)-3zueb``
@@ -70,11 +72,19 @@ we defined such functions using `vForce` functions.
 - ``Vector/divide(_:_:)-926ye``
 - ``Vector/divide(_:_:)-5ka69``
 
+### Vector Reduction
+- ``Vector/dot(_:_:)-1fnml``
+- ``Vector/dot(_:_:)-qh8s``
+- ``Vector/dot(_:_:)-7qdq7``
+- ``Vector/dot(conjugate:_:)-5ftlb``
+- ``Vector/dot(_:conjugate:)-7fgkq``
+
 ### Logarithms and Powers
 - ``Vector/log(_:)-6f7v``
 - ``Vector/exp(_:)-pjx7``
 - ``Vector/expi(_:)-200k8``
 - ``Vector/expi(_:)-2isfb``
+- ``Vector/sqrt(_:)-62kpa``
 - ``Vector/pow(bases:exponents:)-36xxf``
 - ``Vector/pow(bases:exponents:)-1ea9q``
 - ``Vector/pow(bases:exponents:)-9rqkz``
