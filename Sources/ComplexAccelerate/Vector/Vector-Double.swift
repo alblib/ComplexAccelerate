@@ -273,6 +273,12 @@ public extension Vector where Element == Double{
         vForce.tan(vector)
     }
     
+    @inlinable
+    static func cot<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vDSP.divide(1, vForce.tan(vector))
+    }
+    
     
     @inlinable
     static func acos<VectorA>(_ vector: VectorA) -> [Double]
@@ -292,5 +298,61 @@ public extension Vector where Element == Double{
         vForce.atan(vector)
     }
     
+    @inlinable
+    static func acot<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.atan(vDSP.divide(1, vector))
+    }
+    
+    // MARK: - Hyperbolic Functions
+    
+    @inlinable
+    static func cosh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.cosh(vector)
+    }
+    
+    @inlinable
+    static func sinh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.sinh(vector)
+    }
+    
+    @inlinable
+    static func tanh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.tanh(vector)
+    }
+    
+    @inlinable
+    static func coth<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vDSP.divide(1, vForce.tanh(vector))
+    }
+    
+    
+    @inlinable
+    static func acosh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.acosh(vector)
+    }
+    
+    @inlinable
+    static func asinh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.asinh(vector)
+    }
+    
+    @inlinable
+    static func atanh<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.atanh(vector)
+    }
+    
+    @inlinable
+    static func acoth<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.atanh(vDSP.divide(1, vector))
+    }
     
 }

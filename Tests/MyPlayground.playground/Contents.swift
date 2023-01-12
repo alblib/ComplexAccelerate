@@ -10,8 +10,9 @@ let s: Complex<Double> = .init(real: 7, imag: 3)
 
 let start = DispatchTime.now() // <<<<<<<<<< Start time
 
+print( cos(Double.pi / 2) / sin(Double.pi / 2))
 
-print(Vector<Complex<Double>>.asin(vA))
+print( 1 / tan(Double.pi / 2))
 
 let end = DispatchTime.now()   // <<<<<<<<<<   end time
 let nanoTime: UInt64 = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
