@@ -549,6 +549,7 @@ public extension Vector where Element == DSPComplex{
 
 
 // MARK: - Vector Reduction
+// MARK: Dot Product
 
 public extension Vector where Element == Complex<Float>{
     static func dot<ComplexVectorA, ComplexVectorB>
@@ -632,7 +633,66 @@ public extension Vector where Element == DSPComplex{
         _dot(vectorB, vectorA)
     }
 }
+
+// MARK: Array Reduction
+
+public extension Vector where Element == Complex<Float>{
+    static func sum<ComplexVector>(_ vector: ComplexVector) -> Complex<Float>
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _sum(vector)
+    }
+    static func sumOfSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _sum_sqMag(vector)
+    }
+    static func mean<ComplexVector>(_ vector: ComplexVector) -> Complex<Float>
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _mean(vector)
+    }
+    static func meanSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _mean_sqMag(vector)
+    }
+    static func rootMeanSquareMagnitude<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _rmsMag(vector)
+    }
+}
+
+public extension Vector where Element == DSPComplex{
+    static func sum<ComplexVector>(_ vector: ComplexVector) -> DSPComplex
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _sum(vector)
+    }
+    static func sumOfSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _sum_sqMag(vector)
+    }
+    static func mean<ComplexVector>(_ vector: ComplexVector) -> DSPComplex
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _mean(vector)
+    }
+    static func meanSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _mean_sqMag(vector)
+    }
+    static func rootMeanSquareMagnitude<ComplexVector>(_ vector: ComplexVector) -> Float
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _rmsMag(vector)
+    }
+}
     
+
 // MARK: - Single Function
 
 // MARK: Complex Analysis
@@ -658,6 +718,11 @@ public extension Vector where Element == Complex<Float>{
     {
         _arg(vector)
     }
+    static func squareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> [Float]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Float>
+    {
+        _sqrMag(vector)
+    }
 }
 
 
@@ -681,6 +746,11 @@ public extension Vector where Element == DSPComplex{
     where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
     {
         _arg(vector)
+    }
+    static func squareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> [Float]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPComplex
+    {
+        _sqrMag(vector)
     }
 }
 

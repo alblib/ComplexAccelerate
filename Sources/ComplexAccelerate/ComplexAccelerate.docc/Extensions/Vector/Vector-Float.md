@@ -17,6 +17,7 @@ This is introduced to implement the general parallel operation structure ``Vecto
 
 ### Absolute and Negation Functions
 - ``Vector/absolute(_:)-1apjz``
+- ``Vector/square(_:)-6vnq7``
 - ``Vector/negative(_:)-1oeus``
 - ``Vector/negativeAbsolute(_:)-7udtk``
 

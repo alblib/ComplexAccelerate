@@ -12,10 +12,12 @@
 - <doc:Vector-DSPDoubleComplex>
 
 ### Vector Creation
+- ``create(repeating:count:)-28fsu``
 - ``arithmeticProgression(initialValue:increment:count:)-7krbs``
 - ``geometricProgression(initialValue:ratio:count:)-3b7o``
 
 ### Absolute and Negation Functions
+- ``absolute(_:)-43u7``
 - ``negative(_:)-854eb``
 
 

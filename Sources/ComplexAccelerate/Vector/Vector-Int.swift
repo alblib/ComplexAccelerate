@@ -11,6 +11,23 @@ import Accelerate
 
 public extension Vector where Element == Int32{
     
+    static func create(repeating: Int32, count: Int) -> [Int32]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Int32](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard let ptr = buffer.baseAddress else{
+                return
+            }
+            withUnsafePointer(to: repeating) { iPtr in
+                vDSP_vfilli(iPtr, ptr, 1, vDSP_Length(count))
+            }
+            initializedCount = count
+        }
+        
+    }
+    
     static func add<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Int32]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Int32, VectorB.Element == Int32 {
         let count = min(vectorA.count, vectorB.count)

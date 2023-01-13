@@ -247,6 +247,14 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         }
     }
     
+    static func _sqrMag<_ZV>(_ vA: _ZV) -> [Element.Real]
+    where _ZV: AccelerateBuffer, _ZV.Element == Element
+    {
+        __zv_rv(vA) { A, IA, Out, IOut, N in
+            vDSP_zvmagsD(A, IA, Out, IOut, N)
+        }
+    }
+    
     
     // MARK: Parallel Binary Arithmetic zv + zv -> zv
     

@@ -9,7 +9,7 @@ import Foundation
 import Accelerate
 
 public enum Vector<Element>{
-    
+    /*
     internal static func loop<VectorA>(_ vector: VectorA, operation: (Element) -> Element ) -> [Element]
     where VectorA: AccelerateBuffer, VectorA.Element == Element
     {
@@ -18,6 +18,25 @@ public enum Vector<Element>{
             if var ptrA = bufferA.baseAddress{
                 return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
                     var resultPtr: UnsafeMutablePointer<Element> = buffer.baseAddress!
+                    for _ in 0..<count{
+                        resultPtr.initialize(to: operation(ptrA.pointee))
+                        ptrA += 1
+                        resultPtr += 1
+                    }
+                    initializedCount = count
+                }
+            }
+            return []
+        }
+    }*/
+    internal static func loop<VectorA, R>(_ vector: VectorA, operation: (Element) -> R ) -> [R]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element
+    {
+        let count = vector.count
+        return vector.withUnsafeBufferPointer { bufferA in
+            if var ptrA = bufferA.baseAddress{
+                return [R](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+                    var resultPtr: UnsafeMutablePointer<R> = buffer.baseAddress!
                     for _ in 0..<count{
                         resultPtr.initialize(to: operation(ptrA.pointee))
                         ptrA += 1
@@ -51,6 +70,19 @@ public enum Vector<Element>{
                 }
                 return []
             }
+        }
+    }
+    public static func create(repeating: Element, count: Int) -> [Element]
+    {
+        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard var oPtr = buffer.baseAddress else{
+                return
+            }
+            for _ in  0..<count{
+                oPtr.initialize(to: repeating)
+                oPtr += 1
+            }
+            initializedCount = count
         }
     }
 }
@@ -87,6 +119,11 @@ public extension Vector where Element: Numeric{
     static func multiply<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         loop(vectorA, vectorB) { $0 * $1 }
+    }
+    static func absolute<VectorA>(_ vector: VectorA) -> [Element.Magnitude]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element
+    {
+        loop(vector) { $0.magnitude }
     }
     static func geometricProgression(initialValue: Element, ratio: Element, count: Int) -> [Element]{
         if count <= 0{

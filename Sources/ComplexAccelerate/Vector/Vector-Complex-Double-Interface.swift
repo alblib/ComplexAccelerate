@@ -549,6 +549,7 @@ public extension Vector where Element == DSPDoubleComplex{
 
 
 // MARK: - Vector Reduction
+// MARK: Dot Product
 
 public extension Vector where Element == Complex<Double>{
     static func dot<ComplexVectorA, ComplexVectorB>
@@ -632,6 +633,65 @@ public extension Vector where Element == DSPDoubleComplex{
         _dot(vectorB, vectorA)
     }
 }
+
+// MARK: Array Reduction
+
+public extension Vector where Element == Complex<Double>{
+    static func sum<ComplexVector>(_ vector: ComplexVector) -> Complex<Double>
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _sum(vector)
+    }
+    static func sumOfSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _sum_sqMag(vector)
+    }
+    static func mean<ComplexVector>(_ vector: ComplexVector) -> Complex<Double>
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _mean(vector)
+    }
+    static func meanSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _mean_sqMag(vector)
+    }
+    static func rootMeanSquareMagnitude<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _rmsMag(vector)
+    }
+}
+
+public extension Vector where Element == DSPDoubleComplex{
+    static func sum<ComplexVector>(_ vector: ComplexVector) -> DSPDoubleComplex
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _sum(vector)
+    }
+    static func sumOfSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _sum_sqMag(vector)
+    }
+    static func mean<ComplexVector>(_ vector: ComplexVector) -> DSPDoubleComplex
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _mean(vector)
+    }
+    static func meanSquareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _mean_sqMag(vector)
+    }
+    static func rootMeanSquareMagnitude<ComplexVector>(_ vector: ComplexVector) -> Double
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _rmsMag(vector)
+    }
+}
+
     
 // MARK: - Single Function
 
@@ -658,6 +718,11 @@ public extension Vector where Element == Complex<Double>{
     {
         _arg(vector)
     }
+    static func squareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == Complex<Double>
+    {
+        _sqrMag(vector)
+    }
 }
 
 
@@ -681,6 +746,11 @@ public extension Vector where Element == DSPDoubleComplex{
     where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
     {
         _arg(vector)
+    }
+    static func squareMagnitudes<ComplexVector>(_ vector: ComplexVector) -> [Double]
+    where ComplexVector: AccelerateBuffer, ComplexVector.Element == DSPDoubleComplex
+    {
+        _sqrMag(vector)
     }
 }
 

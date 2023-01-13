@@ -95,6 +95,12 @@ public extension Vector where Element == Double{
         Accelerate.vDSP.negativeAbsolute(vector)
     }
     
+    @inline(__always)
+    static func square<VectorA>(_ vector: VectorA) -> [Double]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        Accelerate.vDSP.square(vector)
+    }
+    
     // MARK: Arithmetic between scalars
     
     @inline(__always)

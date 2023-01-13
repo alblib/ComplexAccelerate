@@ -3,11 +3,9 @@ Parallel operation specialization on complex numbers when `Element` is `DSPCompl
 
 ## Overview
 
-This specialization provides convenient Swift-styled parallel computations on complex numbers,
-which is defined in `Accelerate.vDSP_z...`. 
-As parallel mathematical functions on complex array is not defined by system,
-we defined such functions using `vForce` functions.
-
+This specialization of ``Vector`` on `DSPComplex` provides convenient Swift-styled wrapping of
+parallel computations or their combinations on complex numbers,
+which is defined in `Accelerate.vDSP_z...` and `vForce....` . 
 
 ## Topics
 
@@ -27,6 +25,7 @@ we defined such functions using `vForce` functions.
 
 - ``Vector/absolute(_:)-92j68``
 - ``Vector/phase(_:)-4d4kt``
+- ``Vector/squareMagnitudes(_:)-7eova``
 
 - ``Vector/realsAndImaginaries(_:)-2ykyz``
 - ``Vector/reals(_:)-5iv5w``
@@ -72,7 +71,7 @@ we defined such functions using `vForce` functions.
 - ``Vector/divide(_:_:)-96rge``
 - ``Vector/divide(_:_:)-3sapc``
 
-### Vector Reduction
+### Dot Product
 - ``Vector/dot(_:_:)-1bouq``
 - ``Vector/dot(_:_:)-2un8g``
 - ``Vector/dot(_:_:)-5ymou``
@@ -114,3 +113,10 @@ we defined such functions using `vForce` functions.
 - ``Vector/acos(_:)-1hd1q``
 - ``Vector/atan(_:)-9r7or``
 - ``Vector/acot(_:)-3u70s``
+
+### Vector Reduction
+- ``Vector/sum(_:)-6e6ib``
+- ``Vector/sumOfSquareMagnitudes(_:)-6nds9``
+- ``Vector/mean(_:)-8zuox``
+- ``Vector/meanSquareMagnitudes(_:)-8lo7w``
+- ``Vector/rootMeanSquareMagnitude(_:)-5hf76``
