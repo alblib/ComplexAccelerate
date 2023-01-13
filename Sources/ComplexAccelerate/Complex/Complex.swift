@@ -31,24 +31,32 @@ public struct Complex<Real> {
 extension Complex: CustomStringConvertible where Real: CustomStringConvertible{
     public var description: String{
         if Real.self is any FloatingPoint.Type{
+            
+            // Real Description
+            var realDescription = real.description
+            if realDescription.hasSuffix(".0"){
+                realDescription = String(realDescription.dropLast(2))
+            }
+            
+            // Imag Description
+            var imagDescription = imag.description
+            if imagDescription == "1.0"{
+                imagDescription = ""
+            }else if imagDescription.hasSuffix(".0"){
+                imagDescription = String(imagDescription.dropLast(2))
+            }
+            imagDescription += "𝒊"
+            
+            
             if (imag as! (any FloatingPoint)).isZero{
-                let realDescription = real.description
-                if realDescription.hasSuffix(".0"){
-                    return String(realDescription.prefix(realDescription.count - 2))
-                }else{
-                    return realDescription
-                }
+                return realDescription
             }else if (real as! (any FloatingPoint)).isZero{
-                let imagDescription = imag.description
-                if imagDescription == "1.0"{
-                    return "𝒊"
-                }else if imagDescription.hasSuffix(".0"){
-                    return imagDescription.prefix(imagDescription.count - 2) + "𝒊"
-                }else{
-                    return imagDescription + "𝒊"
-                }
+                return imagDescription
             }else{
-                return "(" + real.description + ((imag as! (any FloatingPoint)).sign == .minus ? "-" : "+") + ((imag as! (any FloatingPoint)).magnitude as! Real).description + "𝒊)"
+                if !imagDescription.starts(with: "-"){
+                    imagDescription = "+" + imagDescription
+                }
+                return "(" + realDescription + imagDescription + ")"
             }
         }else{
             return "Complex<\(Real.self)>(" + real.description + "," + imag.description + ")"
