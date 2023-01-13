@@ -170,28 +170,18 @@ extension AccelerateMutableBuffer where Element: GenericComplex{
 
 extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Float{
     mutating func withDSPSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
-        self.withUnsafeMutableBufferPointer { buffer in
-            guard let ptr = buffer.baseAddress else{
-                return nil
-            }
-            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
-                var splitComplex = DSPSplitComplex(realp: pointer, imagp: pointer + 1)
-                return closure(&splitComplex)
-            }
+        self.withRealMutablePointer { pointer in
+            var splitComplex = DSPSplitComplex(realp: pointer, imagp: pointer + 1)
+            return closure(&splitComplex)
         }
     }
 }
 
 extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Double{
     mutating func withDSPDoubleSplitComplexMutablePointer<R>(_ closure: (_ pointer: UnsafePointer<DSPDoubleSplitComplex>) -> R) -> R? {
-        self.withUnsafeMutableBufferPointer { buffer in
-            guard let ptr = buffer.baseAddress else{
-                return nil
-            }
-            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
-                var splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
-                return closure(&splitComplex)
-            }
+        self.withRealMutablePointer { pointer in
+            var splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
+            return closure(&splitComplex)
         }
     }
 }
