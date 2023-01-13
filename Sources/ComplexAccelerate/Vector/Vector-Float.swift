@@ -13,6 +13,20 @@ public extension Vector where Element == Float{
     
     // MARK: Create Vector
     
+    static func zeros(count: Int) -> [Float]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard let ptr = buffer.baseAddress else{
+                return
+            }
+            vDSP_vclr(ptr, 1, vDSP_Length(count))
+            initializedCount = count
+        }
+    }
+    
     static func create(repeating: Float, count: Int) -> [Float]
     {
         [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in

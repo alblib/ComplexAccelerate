@@ -9,9 +9,6 @@ import Foundation
 import Accelerate
 
 
-
-
-
 protocol GenericComplex{
     associatedtype Real
     var real: Real { get }
@@ -93,6 +90,21 @@ extension GenericComplex where Real == Double{
     }
 }
 
+
+extension AccelerateBuffer where Element: GenericComplex{
+    func withRealPointer<R>(_ closure: (_ pointer: UnsafePointer<Element.Real>) -> R) -> R? {
+        self.withUnsafeBufferPointer { buffer in
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                return closure(pointer)
+            }
+        }
+    }
+}
+
+
 extension AccelerateBuffer where Element: GenericComplex, Element.Real == Float{
     func withDSPSplitComplexPointer<R>(_ closure: (_ pointer: UnsafePointer<DSPSplitComplex>) -> R) -> R? {
         self.withUnsafeBufferPointer { buffer in
@@ -138,6 +150,19 @@ extension AccelerateBuffer where Element: GenericComplex, Element.Real == Double
             return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
                 let splitComplex = DSPDoubleSplitComplex(realp: .init(mutating: pointer), imagp: .init(mutating: pointer + 1))
                 return closure(splitComplex)
+            }
+        }
+    }
+}
+
+extension AccelerateMutableBuffer where Element: GenericComplex{
+    mutating func withRealMutablePointer<R>(_ closure: (_ pointer: UnsafeMutablePointer<Element.Real>) -> R) -> R? {
+        self.withUnsafeMutableBufferPointer { buffer in
+            guard let ptr = buffer.baseAddress else{
+                return nil
+            }
+            return ptr.withMemoryRebound(to: Element.Real.self, capacity: 2 * buffer.count) { pointer in
+                return closure(pointer)
             }
         }
     }

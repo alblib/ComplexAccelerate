@@ -9,6 +9,7 @@ This is introduced to implement the general parallel operation structure ``Vecto
 ## Topics
 
 ### Vector Creation
+- ``Vector/zeros(count:)-9paa7``
 - ``Vector/create(repeating:count:)-5yog6``
 - ``Vector/arithmeticProgression(initialValue:increment:count:)-8kcr``
 - ``Vector/arithmeticProgression(initialValue:to:count:)-5ipam``

@@ -20,6 +20,18 @@ public extension Vector where Element == Complex<Float>{
         }
         return _merge(reals: vector, imaginaries: imags)
     }
+    static func zeros(count: Int) -> [Complex<Float>]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            buffer.withRealMutablePointer { pointer in
+                vDSP_vclr(pointer, 1, vDSP_Length(count))
+            }
+            initializedCount = count
+        }
+    }
     static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [Complex<Float>]
     where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Float, RealVectorB.Element == Float
     {
@@ -78,6 +90,18 @@ public extension Vector where Element == DSPComplex{
             initializedCount = vector.count
         }
         return _merge(reals: vector, imaginaries: imags)
+    }
+    static func zeros(count: Int) -> [DSPComplex]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            buffer.withRealMutablePointer { pointer in
+                vDSP_vclr(pointer, 1, vDSP_Length(count))
+            }
+            initializedCount = count
+        }
     }
     static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [DSPComplex]
     where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Float, RealVectorB.Element == Float

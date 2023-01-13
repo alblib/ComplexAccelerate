@@ -12,6 +12,7 @@ which is defined in `Accelerate.vDSP_z...` and `vForce....` .
 
 ### Vector Creation
 - ``Vector/castToComplexes(_:)-1vtim``
+- ``Vector/zeros(count:)-1j0lj``
 - ``Vector/create(reals:imaginaries:)-8zz6p``
 - ``Vector/create(repeating:count:)-21jot``
 - ``Vector/arithmeticProgression(initialValue:increment:count:)-9jshe``

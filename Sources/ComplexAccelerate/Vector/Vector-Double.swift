@@ -13,6 +13,20 @@ public extension Vector where Element == Double{
     
     // MARK: Create Vector
     
+    static func zeros(count: Int) -> [Double]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard let ptr = buffer.baseAddress else{
+                return
+            }
+            vDSP_vclrD(ptr, 1, vDSP_Length(count))
+            initializedCount = count
+        }
+    }
+    
     static func create(repeating: Double, count: Int) -> [Double]
     {
         [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
