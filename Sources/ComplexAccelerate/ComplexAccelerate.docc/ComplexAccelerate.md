@@ -14,4 +14,4 @@
 
 ### Parallel Operations
 
-- ``ComplexAccelerate/ComplexAccelerate``
+- ``Vector``

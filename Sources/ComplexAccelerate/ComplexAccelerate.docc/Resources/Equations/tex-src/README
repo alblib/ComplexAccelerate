@@ -1,5 +1,0 @@
-See https://gist.github.com/retorillo/4ed72e705bdb6e3e2c6c29cada29f012
-
-On Mac, you only need to do `brew install imagemagick` to build the tex to png
-
-Then, compile using `pdflatex --shell-escape --enable-write18 file.tex`
