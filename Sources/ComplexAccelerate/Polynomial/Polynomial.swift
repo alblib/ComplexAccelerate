@@ -918,6 +918,18 @@ extension Polynomial where Coefficient == DSPDoubleComplex{
 
 // MARK: - Substitution
 
+extension Polynomial where Coefficient: Numeric{
+    public func substitute(variable by: Self) -> Self{
+        var result = Self.zero
+        var mono = Self.one
+        for i in self.coefficients{
+            result += i * mono
+            mono *= by
+        }
+        return result
+    }
+}
+
 extension Polynomial where Coefficient == Float{
     public func substitute(variable by: Self) -> Self{
         var result = Self.zero

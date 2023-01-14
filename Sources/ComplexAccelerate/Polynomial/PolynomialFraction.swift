@@ -19,10 +19,10 @@ public struct PolynomialFraction<Coefficient>
     }
 }
 extension PolynomialFraction where Coefficient: ExpressibleByIntegerLiteral{
-    public var zero: Self{
+    public static var zero: Self{
         Self(numerator: .zero, denominator: .one)
     }
-    public var one: Self{
+    public static var one: Self{
         Self(numerator: .one, denominator: .one)
     }
 }
@@ -529,5 +529,126 @@ extension PolynomialFraction where Coefficient == DSPDoubleComplex{
     }
     public func evaluate(variable values: [Coefficient]) -> [Coefficient]{
         Vector<Coefficient>.divide(self.numerator.evaluate(variable: values), self.denominator.evaluate(variable: values))
+    }
+}
+
+// MARK: - Substitution
+extension PolynomialFraction where Coefficient: Numeric{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self.zero
+        var mono = Self.one
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self.zero
+        mono = Self.one
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == Float{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self.zero
+        var mono = Self.one
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self.zero
+        mono = Self.one
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == Double{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self.zero
+        var mono = Self.one
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self.zero
+        mono = Self.one
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == DSPComplex{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self(numerator: .zero, denominator: [.init(real: 1, imag: 0)])
+        var mono = Self(numerator: [.init(real: 1, imag: 0)], denominator: [.init(real: 1, imag: 0)])
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self(numerator: .zero, denominator: [.init(real: 1, imag: 0)])
+        mono = Self(numerator: [.init(real: 1, imag: 0)], denominator: [.init(real: 1, imag: 0)])
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == DSPDoubleComplex{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self(numerator: .zero, denominator: [.init(real: 1, imag: 0)])
+        var mono = Self(numerator: [.init(real: 1, imag: 0)], denominator: [.init(real: 1, imag: 0)])
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self(numerator: .zero, denominator: [.init(real: 1, imag: 0)])
+        mono = Self(numerator: [.init(real: 1, imag: 0)], denominator: [.init(real: 1, imag: 0)])
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == Complex<Float>{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self.zero
+        var mono = Self.one
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self.zero
+        mono = Self.one
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
+    }
+}
+extension PolynomialFraction where Coefficient == Complex<Double>{
+    public func substitute(variable by: Self) -> Self{
+        var Nresult = Self.zero
+        var mono = Self.one
+        for i in self.numerator.coefficients{
+            Nresult += i * mono
+            mono *= by
+        }
+        var Dresult = Self.zero
+        mono = Self.one
+        for i in self.denominator.coefficients{
+            Dresult += i * mono
+            mono *= by
+        }
+        return Nresult / Dresult
     }
 }
