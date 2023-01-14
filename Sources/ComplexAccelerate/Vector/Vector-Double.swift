@@ -123,8 +123,8 @@ public extension Vector where Element == Double{
         vDSP.add(scalar, vector)
     }
     @inline(__always)
-    static func add<VectorA>(_ scalar: Double, _ vector: VectorA) -> [Double]
-    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+    static func add<VectorB>(_ scalar: Double, _ vector: VectorB) -> [Double]
+    where VectorB: AccelerateBuffer, VectorB.Element == Element{
         vDSP.add(scalar, vector)
     }
     

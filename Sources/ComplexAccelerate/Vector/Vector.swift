@@ -115,6 +115,46 @@ public extension Vector where Element: Numeric{
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
         loop(vectorA, vectorB) { $0 * $1 }
     }
+    
+    static func multiply<VectorA>(_ vector: VectorA, _ scalar: Element) -> [Element]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        [Element](unsafeUninitializedCapacity: vector.count) { buffer, initializedCount in
+            guard var ptr = buffer.baseAddress else{
+                return
+            }
+            vector.withUnsafeBufferPointer { iBuffer in
+                guard var iPtr = iBuffer.baseAddress else{
+                    return
+                }
+                for _ in 0..<vector.count{
+                    ptr.initialize(to: iPtr.pointee * scalar)
+                    ptr += 1
+                    iPtr += 1
+                }
+            }
+            initializedCount = vector.count
+        }
+    }
+    
+    static func multiply<VectorB>(_ scalar: Element, _ vector: VectorB) -> [Element]
+    where VectorB: AccelerateBuffer, VectorB.Element == Element{
+        [Element](unsafeUninitializedCapacity: vector.count) { buffer, initializedCount in
+            guard var ptr = buffer.baseAddress else{
+                return
+            }
+            vector.withUnsafeBufferPointer { iBuffer in
+                guard var iPtr = iBuffer.baseAddress else{
+                    return
+                }
+                for _ in 0..<vector.count{
+                    ptr.initialize(to: scalar * iPtr.pointee)
+                    ptr += 1
+                    iPtr += 1
+                }
+            }
+            initializedCount = vector.count
+        }
+    }
     static func absolute<VectorA>(_ vector: VectorA) -> [Element.Magnitude]
     where VectorA: AccelerateBuffer, VectorA.Element == Element
     {

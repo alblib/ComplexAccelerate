@@ -19,7 +19,8 @@ final class ComplexAccelerateTests: XCTestCase {
         print(b)
         print(Polynomial<Float>(coefficients: [1,2,1]) * Polynomial<Float>(coefficients: [1,1]))
         print(Polynomial<Double>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
-        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]))
+        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).degree)
         print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
+        print(Polynomial<Double>(coefficients: [1,2,3,8]) + Polynomial<Double>(coefficients: []))
     }
 }
