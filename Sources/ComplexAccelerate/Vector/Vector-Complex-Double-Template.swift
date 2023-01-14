@@ -209,6 +209,24 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
         }
     }
     
+    static func _zeros(count: Int) -> [Element]
+    {
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            buffer.withRealMutablePointer { pointer in
+                vDSP_vclrD(pointer, 1, vDSP_Length(count))
+            }
+            initializedCount = count
+        }
+    }
+    
+    static func _castToComplexes<RealVector>(_ vector: RealVector) -> [Element]
+    where RealVector: AccelerateBuffer, RealVector.Element == Element.Real
+    {
+        _merge(reals: vector, imaginaries: Vector<Element.Real>.zeros(count: vector.count))
+    }
 }
 
 // MARK: - Arithmetics
@@ -842,7 +860,7 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
             return []
         }
         return [Element](unsafeUninitializedCapacity: count) { obuffer, initializedCount in
-            obuffer.withDSPDoubleSplitComplex { oSplitComplex in
+            obuffer.withDSPDoubleSplitComplexMutable { oSplitComplex in
                 withUnsafePointer(to: begin.real) { iRealPtr in
                     withUnsafePointer(to: increment.real) { incRealPtr in
                         vDSP_vrampD(iRealPtr, incRealPtr, oSplitComplex.realp, 2, vDSP_Length(count))
@@ -850,7 +868,7 @@ extension Vector where Element: GenericComplex, Element.Real == Double{
                 }
                 withUnsafePointer(to: begin.imag) { iImagPtr in
                     withUnsafePointer(to: increment.imag) { incImagPtr in
-                        vDSP_vrampD(iImagPtr, incImagPtr, oSplitComplex.realp, 2, vDSP_Length(count))
+                        vDSP_vrampD(iImagPtr, incImagPtr, oSplitComplex.imagp, 2, vDSP_Length(count))
                     }
                 }
             }

@@ -14,23 +14,11 @@ public extension Vector where Element == Complex<Double>{
     static func castToComplexes<RealVector>(_ vector: RealVector) -> [Complex<Double>]
     where RealVector: AccelerateBuffer, RealVector.Element == Double
     {
-        let imags = [Double](unsafeUninitializedCapacity: vector.count) { buffer, initializedCount in
-            vDSP.fill(&buffer, with: 0)
-            initializedCount = vector.count
-        }
-        return _merge(reals: vector, imaginaries: imags)
+        _castToComplexes(vector)
     }
     static func zeros(count: Int) -> [Complex<Double>]
     {
-        guard count > 0 else{
-            return []
-        }
-        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
-            buffer.withRealMutablePointer { pointer in
-                vDSP_vclrD(pointer, 1, vDSP_Length(count))
-            }
-            initializedCount = count
-        }
+        _zeros(count: count)
     }
     static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [Complex<Double>]
     where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Double, RealVectorB.Element == Double
@@ -85,23 +73,11 @@ public extension Vector where Element == DSPDoubleComplex{
     static func castToComplexes<RealVector>(_ vector: RealVector) -> [DSPDoubleComplex]
     where RealVector: AccelerateBuffer, RealVector.Element == Double
     {
-        let imags = [Double](unsafeUninitializedCapacity: vector.count) { buffer, initializedCount in
-            vDSP.fill(&buffer, with: 0)
-            initializedCount = vector.count
-        }
-        return _merge(reals: vector, imaginaries: imags)
+        _castToComplexes(vector)
     }
     static func zeros(count: Int) -> [DSPDoubleComplex]
     {
-        guard count > 0 else{
-            return []
-        }
-        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
-            buffer.withRealMutablePointer { pointer in
-                vDSP_vclrD(pointer, 1, vDSP_Length(count))
-            }
-            initializedCount = count
-        }
+        _zeros(count: count)
     }
     static func create<RealVectorA, RealVectorB>(reals: RealVectorA, imaginaries: RealVectorB) -> [DSPDoubleComplex]
     where RealVectorA: AccelerateBuffer, RealVectorB: AccelerateBuffer, RealVectorA.Element == Double, RealVectorB.Element == Double

@@ -9,26 +9,6 @@ import Foundation
 import Accelerate
 
 public enum Vector<Element>{
-    /*
-    internal static func loop<VectorA>(_ vector: VectorA, operation: (Element) -> Element ) -> [Element]
-    where VectorA: AccelerateBuffer, VectorA.Element == Element
-    {
-        let count = vector.count
-        return vector.withUnsafeBufferPointer { bufferA in
-            if var ptrA = bufferA.baseAddress{
-                return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
-                    var resultPtr: UnsafeMutablePointer<Element> = buffer.baseAddress!
-                    for _ in 0..<count{
-                        resultPtr.initialize(to: operation(ptrA.pointee))
-                        ptrA += 1
-                        resultPtr += 1
-                    }
-                    initializedCount = count
-                }
-            }
-            return []
-        }
-    }*/
     internal static func loop<VectorA, R>(_ vector: VectorA, operation: (Element) -> R ) -> [R]
     where VectorA: AccelerateBuffer, VectorA.Element == Element
     {
@@ -88,9 +68,24 @@ public enum Vector<Element>{
 }
 
 public extension Vector where Element: AdditiveArithmetic{
+    static func zeros(count: Int) -> [Element]{
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+            guard var oPtr = buffer.baseAddress else{
+                return
+            }
+            for _ in  0..<count{
+                oPtr.initialize(to: Element.zero)
+                oPtr += 1
+            }
+            initializedCount = count
+        }
+    }
     static func add<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
     where VectorA: AccelerateBuffer, VectorB: AccelerateBuffer, VectorA.Element == Element, VectorB.Element == Element{
-        loop(vectorA, vectorB) { $0 + $1 }
+        return loop(vectorA, vectorB) { $0 + $1 }
     }
     
     static func subtract<VectorA, VectorB>(_ vectorA: VectorA, _ vectorB: VectorB) -> [Element]
