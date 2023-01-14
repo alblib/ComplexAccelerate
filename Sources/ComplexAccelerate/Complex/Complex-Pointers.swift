@@ -175,6 +175,13 @@ extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real ==
             return closure(&splitComplex)
         }
     }
+    
+    mutating func withDSPSplitComplexMutable<R>(_ closure: (_ splitComplex: DSPSplitComplex) -> R) -> R? {
+        self.withRealMutablePointer { pointer in
+            let splitComplex = DSPSplitComplex(realp: pointer, imagp: pointer + 1)
+            return closure(splitComplex)
+        }
+    }
 }
 
 extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real == Double{
@@ -182,6 +189,12 @@ extension AccelerateMutableBuffer where Element: GenericComplex, Element.Real ==
         self.withRealMutablePointer { pointer in
             var splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
             return closure(&splitComplex)
+        }
+    }
+    mutating func withDSPDoubleSplitComplexMutable<R>(_ closure: (_ splitComplex: DSPDoubleSplitComplex) -> R) -> R? {
+        self.withRealMutablePointer { pointer in
+            let splitComplex = DSPDoubleSplitComplex(realp: pointer, imagp: pointer + 1)
+            return closure(splitComplex)
         }
     }
 }

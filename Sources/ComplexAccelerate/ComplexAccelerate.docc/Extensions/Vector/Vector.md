@@ -12,6 +12,7 @@
 - <doc:Vector-DSPDoubleComplex>
 
 ### Vector Creation
+- ``zeros(count:)-1gvl8``
 - ``create(repeating:count:)-28fsu``
 - ``arithmeticProgression(initialValue:increment:count:)-7krbs``
 - ``geometricProgression(initialValue:ratio:count:)-3b7o``
