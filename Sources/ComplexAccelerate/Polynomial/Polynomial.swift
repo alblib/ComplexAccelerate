@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// has inverse notation from vDSP.
 public struct Polynomial<Coefficient>: ExpressibleByArrayLiteral
 {
     public var coefficients: [Coefficient]
