@@ -1,5 +1,9 @@
 #  ``ComplexAccelerate/Vector``
 
+## Overview
+error proof
+dynamic specialization
+
 ## Topics
 
 ### Specializations
@@ -24,6 +28,12 @@
 
 ### Parallel Arithmetics
 - ``add(_:_:)-546us``
+- ``add(_:_:)-60ctx``
+- ``add(_:_:)-2xr5a``
 - ``subtract(_:_:)-2kufu``
+- ``subtract(_:_:)-58xnv``
+- ``subtract(_:_:)-4n36n``
 - ``multiply(_:_:)-4koe8``
+- ``multiply(_:_:)-73mdk``
+- ``multiply(_:_:)-6qyy``
 

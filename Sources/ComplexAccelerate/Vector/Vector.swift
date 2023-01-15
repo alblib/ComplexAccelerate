@@ -236,8 +236,8 @@ public extension Vector where Element: AdditiveArithmetic{
         }
     }
     
-    static func add<VectorB>(_ vector: VectorB, _ scalar: Element) -> [Element]
-    where VectorB: AccelerateBuffer, VectorB.Element == Element{
+    static func add<VectorA>(_ vector: VectorA, _ scalar: Element) -> [Element]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
         if Element.self is Float.Type{
             return vector.withUnsafeBufferPointer { buffer in
                 buffer.withMemoryRebound(to: Float.self) { buffer in
@@ -425,8 +425,8 @@ public extension Vector where Element: AdditiveArithmetic{
         }
     }
     
-    static func subtract<VectorB>(_ vector: VectorB, _ scalar: Element) -> [Element]
-    where VectorB: AccelerateBuffer, VectorB.Element == Element{
+    static func subtract<VectorA>(_ vector: VectorA, _ scalar: Element) -> [Element]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
         if Element.self is Float.Type{
             return vector.withUnsafeBufferPointer { buffer in
                 buffer.withMemoryRebound(to: Float.self) { buffer in
