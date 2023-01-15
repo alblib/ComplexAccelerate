@@ -27,7 +27,10 @@ public extension Vector where Element == Complex<Double>{
     }
     static func create(repeating: Complex<Double>, count: Int) -> [Complex<Double>]
     {
-        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             buffer.withDSPDoubleSplitComplexPointer { outPtr in
                 repeating.withDSPDoubleSplitComplexPointer { repeatingPtr in
                     vDSP_zvfillD(repeatingPtr, outPtr, 2, vDSP_Length(count))
@@ -86,7 +89,10 @@ public extension Vector where Element == DSPDoubleComplex{
     }
     static func create(repeating: DSPDoubleComplex, count: Int) -> [DSPDoubleComplex]
     {
-        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             buffer.withDSPDoubleSplitComplexPointer { outPtr in
                 repeating.withDSPDoubleSplitComplexPointer { repeatingPtr in
                     vDSP_zvfillD(repeatingPtr, outPtr, 2, vDSP_Length(count))

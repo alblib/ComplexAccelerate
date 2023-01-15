@@ -27,7 +27,10 @@ public extension Vector where Element == Complex<Float>{
     }
     static func create(repeating: Complex<Float>, count: Int) -> [Complex<Float>]
     {
-        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             buffer.withDSPSplitComplexPointer { outPtr in
                 repeating.withDSPSplitComplexPointer { repeatingPtr in
                     vDSP_zvfill(repeatingPtr, outPtr, 2, vDSP_Length(count))
@@ -86,7 +89,10 @@ public extension Vector where Element == DSPComplex{
     }
     static func create(repeating: DSPComplex, count: Int) -> [DSPComplex]
     {
-        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             buffer.withDSPSplitComplexPointer { outPtr in
                 repeating.withDSPSplitComplexPointer { repeatingPtr in
                     vDSP_zvfill(repeatingPtr, outPtr, 2, vDSP_Length(count))
