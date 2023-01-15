@@ -1,8 +1,5 @@
 #  ``ComplexAccelerate/Vector``
 
-## Overview
-error proof
-dynamic specialization
 
 ## Topics
 

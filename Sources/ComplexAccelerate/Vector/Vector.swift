@@ -8,8 +8,79 @@
 import Foundation
 import Accelerate
 
+/// A generic namespace for parallel functions on floating-point real and complex numbers.
+///
+/// This is a namespace for `vDSP` and `vForce` parallelized operations on `Float`, `Double`, and `Complex`es.
+/// This enumeration structure is specialized and specifically bound to `vDSP` functions directly only if `Element` is given by
+/// * `Float`  (from the system `Swift` package)
+/// * `Double`  (from the system `Swift` package)
+/// * `Complex<Float>`
+/// * `Complex<Double>`
+/// * `DSPComplex` (from Apple's `Accelerate` package), or
+/// * `DSPDoubleComplex` (from Apple's `Accelerate` package).
+///
+/// This enumeration structure is
+/// * Generics with General Implementation and Specialization for parallelizable types,
+/// * Dynamic Specialization in even General Implementation to Optimize Indirect-type calls, and
+/// * Error-proof, preventing exception as possible.
+///
+/// ### General Implementation and Calling Specialization Directly
+///
+/// Even if `Element` is not given as above, if `Element` conforms to certain protocols,
+/// a general implementation based on for-loop and protocol-provided functions is given.
+/// To call the parallel functions without ambiguity, speficify the generic argument explicitly and directly e.g. `Vector<Complex<Double>>.someFunction()`.
+/// ```swift
+/// extension Double: Numeric {}
+/// let a: [Double] = [1, 2, 3]
+///
+/// /* Direct Call:
+///    calls Vector<Double>.multiply(Double, Double)
+///    i.e. Accelerate.vDSP.multiply(Double, Double). */
+/// Vector<Double>.multiply(a, a)
+///
+/// /* calls Vector<Double>.multiply(Double, Double),
+///    inferred by direct declaration of argument a: [Double]. */
+/// Vector.multiply(a, a)
+///
+/// /*　Indirect Call:
+///    Calls the general function
+///    Vector<Numeric>.multiply(Numeric, Numeric)
+///    not Vector<Double>.multiply(Double, Double). */
+/// test(array: a)
+/// func test(array: [Number]) where Number: Numeric{
+///     Vector.multiply(array, array)
+/// }
+/// ```
+/// ### Dynamic(runtime) Specialization
+/// If generic argument typename is not assigned directly, `Swift` compiler does not call the specialization.
+/// For such indirect reference, this structure also implements dynamic specialization in the general case.
+/// The definition `Vector<Element>.someFunction()` for general `Element` runs conditional statement to test the input type in runtime.
+/// ```swift
+/// public struct Vector<Element>{
+///     func someFunction(input: Element){
+///         if Element.self is Float.Type{
+///             ...
+///         }else if Element.self is Double.Type{
+///             ...
+///         }...
+///     }
+/// }
+/// ```
+/// The explicit specializations of `Vector` are implemented for 6 types so 6 conditions are tested in the general implementation.
+/// So, to shorten the execution time, use direct call as possible.
+/// > Note: Dynamic specialization guarantees to call vDSP and other vecLib function as possible, but to shorten execution time, use direct specialization with explicit type name as possible.
+///
+/// ### Error-proof
+/// Functions in this namespace are specified to avoid exceptions as possible.
+///
+/// In vector operations, the most annoying case to prevent guaranteeing error-proof is the dimension mismatch.
+/// `vDSP` binary operations requires two array having same dimension.
+/// In `Vector`, functions operates only on common parts of each vector, so the result would be the lesser of the dimensions of the two input vectors.
+/// 
+/// Also, when you generate a vector, there can be a user mistake that assigns the dimension negative.
+/// This implementation also prevents this and returns empty vector in such case.
+///
 public enum Vector<Element>{
-    typealias Element = Element
     
     internal static func loop<VectorA, R>(_ vector: VectorA, operation: (Element) -> R ) -> [R]
     where VectorA: AccelerateBuffer, VectorA.Element == Element

@@ -1,6 +1,11 @@
 import XCTest
 @testable import ComplexAccelerate
 
+func tete<TE>(a: [TE], b:[TE]) -> [TE]
+where TE: AdditiveArithmetic{
+    return Vector<TE>.subtract(a, b)
+}
+
 final class ComplexAccelerateTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
@@ -22,5 +27,14 @@ final class ComplexAccelerateTests: XCTestCase {
         print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).degree)
         print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
         print(Polynomial<Double>(coefficients: [1,2,3,8]) + Polynomial<Double>(coefficients: []))
+        var format = PolynomialFormatter()
+        format.numberFormatter = NumberFormatter()
+        format.numberFormatter?.minimumFractionDigits = 10
+        print(PolynomialFormatter().string(from: Polynomial<Double>(coefficients: [1,2,3,8]) ))
+        print(Polynomial<Complex<Double>>(coefficients: [.I,2+Complex.I,3,8]) )
+        print(Vector<Double>.create(repeating: 0, count: -1))
+        
+        let cc: [Double] = [1,2]
+        print(tete(a: cc, b: cc))
     }
 }

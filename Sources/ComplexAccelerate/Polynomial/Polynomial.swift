@@ -9,6 +9,9 @@ import Foundation
 import Accelerate
 
 /// has inverse notation from vDSP.
+/// arithmetics and evaluations
+
+/// A structure representing a polynomial and implementing arithmetics between two of them and evaluation of it.
 public struct Polynomial<Coefficient>: ExpressibleByArrayLiteral
 {
     public var coefficients: [Coefficient]
@@ -51,6 +54,17 @@ extension Polynomial where Coefficient: AdditiveArithmetic{
                 }
             }
             return 0
+        }
+    }
+}
+
+extension Polynomial: CustomStringConvertible where Coefficient: AdditiveArithmetic & CustomStringConvertible{
+    public var description: String{
+        print(Coefficient.self)
+        if Coefficient.self is any GenericComplex.Type{
+            return PolynomialFormatter(variable: PolynomialFormatter.Monomial("𝑧")).string(from: self)
+        }else{
+            return PolynomialFormatter().string(from: self)
         }
     }
 }

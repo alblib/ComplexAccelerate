@@ -8,6 +8,8 @@
 import Foundation
 import Accelerate
 
+
+/// A structure implementing a matrix and its arithmetics parallely with BLAS.
 public struct Matrix<Element>{
     public var elements: [Element]
     public var rowCount: Int

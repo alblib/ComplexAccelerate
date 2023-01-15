@@ -8,7 +8,7 @@ generic tree should be explained.
 
 ## Topics
 
-### Singlet Definitions and Operations of Complex Numbers
+### Complex Analysis
 
 - ``Complex``
 
