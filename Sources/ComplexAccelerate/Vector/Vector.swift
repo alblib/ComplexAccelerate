@@ -18,8 +18,9 @@ import Accelerate
 /// * `Complex<Double>`
 /// * `DSPComplex` (from Apple's `Accelerate` package), or
 /// * `DSPDoubleComplex` (from Apple's `Accelerate` package).
+/// for major massive parallel calculations. Other subsidiary features may be implemented in specializations for some other types.
 ///
-/// This enumeration structure is
+/// This enumeration structure features
 /// * Generics with General Implementation and Specialization for parallelizable types,
 /// * Dynamic Specialization in even General Implementation to Optimize Indirect-type calls, and
 /// * Error-proof, preventing exception as possible.

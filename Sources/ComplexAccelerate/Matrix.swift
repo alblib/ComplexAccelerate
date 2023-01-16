@@ -34,10 +34,11 @@ public struct Matrix<Element>{
         let indexEnd = (index + 1) * columnCount
         return Array(elements[indexBase..<indexEnd])
     }
-
 }
 
+
 extension Matrix: ExpressibleByArrayLiteral{
+    /// Creates a vertical vector matrix.
     public init(arrayLiteral elements: Element...) {
         self.elements = elements
         self.rowCount = self.elements.count
