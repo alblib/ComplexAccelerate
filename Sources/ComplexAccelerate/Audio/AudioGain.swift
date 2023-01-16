@@ -45,7 +45,7 @@ public struct AudioGain: ExpressibleByFloatLiteral{
 
 extension AudioGain: CustomStringConvertible{
     public var description: String{
-        String(format: "%.1fdB", self.inDecibels)
+        String(format: "%+.1fdB", self.inDecibels)
     }
 }
 
@@ -115,5 +115,16 @@ public extension Vector where Element == AudioGain{
     where FloatArray: AccelerateBuffer, FloatArray.Element == Float
     {
         create(decibels: vDSP.floatToDouble(decibels))
+    }
+    
+    static func gainMultiply<GainArray>(_ gains: GainArray, _ gain: AudioGain) -> [AudioGain]
+    where GainArray: AccelerateBuffer, GainArray.Element == AudioGain
+    {
+        create(amplitudeGains: vDSP.multiply(gain.byAmplitude, amplitudeGains(of: gains)))
+    }
+    static func gainMultiply<GainArray>(_ gain: AudioGain, _ gains: GainArray) -> [AudioGain]
+    where GainArray: AccelerateBuffer, GainArray.Element == AudioGain
+    {
+        create(amplitudeGains: vDSP.multiply(gain.byAmplitude, amplitudeGains(of: gains)))
     }
 }

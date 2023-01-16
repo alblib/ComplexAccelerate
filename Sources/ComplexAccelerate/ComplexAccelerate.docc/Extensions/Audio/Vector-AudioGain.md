@@ -14,3 +14,7 @@
 - ``Vector/create(powerGains:)-61b4q``
 - ``Vector/create(decibels:)-77ivi``
 - ``Vector/create(decibels:)-3lmx9``
+
+### Adding Gains
+- ``Vector/gainMultiply(_:_:)-4cg76``
+- ``Vector/gainMultiply(_:_:)-7l7ng``
