@@ -1,5 +1,5 @@
 //
-//  Subscripter.swift
+//  StringSubstituter.swift
 //  
 //
 //  Created by Albertus Liberius on 2023-01-17.
@@ -53,7 +53,8 @@ public class StringSubstituter{
             with: "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₕᵢⱼₖₗₘₙₒₚᵣₛₜᵤᵥₓᵦᵦᵦᵧᵧᵧᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵩᵩᵪ")
     }
     /// Converts the scientific style floating point description to human-written style.
-    public static func makeFancy(_ scientific: String, isStrictlyScientific: Bool = false) -> String{
+    public static func makeFancy(_ scientific: String, isStrictlyScientific: Bool = false, usesThinSpaces: Bool = false) -> String{
+        let thinSpace = usesThinSpaces ? " " : ""
         var Eseparated = scientific.split(separator: "e", maxSplits: 2)
         if Eseparated.count != 2{
             Eseparated = scientific.split(separator: "E", maxSplits: 2)
@@ -61,7 +62,7 @@ public class StringSubstituter{
                 return scientific
             }
         }
-        let result = Eseparated[0] + "×10" + convertToSuperscript(String(Eseparated[1]))
+        let result = Eseparated[0] + thinSpace + "×" + thinSpace + "10" + convertToSuperscript(String(Eseparated[1]))
         if isStrictlyScientific{
             return result
         }
