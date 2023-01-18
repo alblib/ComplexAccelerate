@@ -2,7 +2,7 @@
 //  Polynomial.swift
 //  
 //
-//  Created by Albertus Liberius on 2023-01-13.
+//  Created by Albertus Liberius on 2022-12-10, 2023-01-13.
 //
 
 import Foundation
@@ -29,6 +29,31 @@ public struct Polynomial<Coefficient>: ExpressibleByArrayLiteral
     }
     public var degree: Int{
         max(0, self.coefficients.count - 1)
+    }
+    
+    /// Exception-free coefficient dereference function.
+    ///
+    /// Calls the coefficient of `pow(x, order)` from the polynomial `f(x)`. If `order` exceeds the ``coefficients`` array, this returns zero.
+    /// - Returns: ``coefficients``​`[order]` if `order < coefficients.count`. Otherwise, zero.
+    /// - Parameter order: The exponent of the monomial, the coefficient of which is demanded.
+    public func coefficient(order: Int) -> Coefficient
+    where Coefficient: AdditiveArithmetic
+    {
+        if order < coefficients.count{
+            return coefficients[order]
+        }else{
+            return .zero
+        }
+    }
+    /// Gives coefficients of given multiple monomials.
+    ///
+    /// Gives the coefficients of the monomials, the exponents of which is given by `ordersOfTerms`.
+    /// - Parameter ordersOfTerms: The exponents representing the monomials we demand.
+    /// - Returns: The coefficients of the monomials we gave.
+    public func coefficients(ordersOfTerms: [Int]) -> [Coefficient]
+    where Coefficient: AdditiveArithmetic
+    {
+        ordersOfTerms.map{self.coefficient(order: $0)}
     }
 }
 

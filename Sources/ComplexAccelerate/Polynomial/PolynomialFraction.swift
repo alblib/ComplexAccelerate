@@ -17,6 +17,9 @@ public struct PolynomialFraction<Coefficient>
         self.numerator = numerator
         self.denominator = denominator
     }
+    public var order: Int{
+        max(numerator.degree, denominator.degree)
+    }
 }
 extension PolynomialFraction where Coefficient: ExpressibleByIntegerLiteral{
     public static var zero: Self{
