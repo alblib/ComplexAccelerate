@@ -64,7 +64,9 @@ public class StringSubstituter{
                 return scientific
             }
         }
-        let result = Eseparated[0] + thinSpace + "×" + thinSpace + "10" + convertToSuperscript(String(Eseparated[1]).replacingOccurrences(of: "+", with: ""))
+        let flatExponent = String(Eseparated[1]).replacingOccurrences(of: "+", with: "")
+        let exponent: String = convertToSuperscript(flatExponent)
+        let result: String = Eseparated[0] + (flatExponent == "0" ? "" : (thinSpace + "×" + thinSpace + "10" + exponent))
         if isStrictlyScientific{
             return result
         }

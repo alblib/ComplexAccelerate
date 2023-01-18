@@ -31,21 +31,49 @@ public class ComplexFormatter: Formatter{
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    public func string(for number: Complex<Any>) -> String?{
-        guard let realStr = realNumberFormatter.string(for: number.real) else{
-            return nil
-        }
-        guard let imagStr = realNumberFormatter.string(for: number.imag) else{
-            return nil
-        }
-        if complexPrintingType == .algebraic{
-            let thinSpace = usesThinSpaces ? StringSubstituter.thinSpace : ""
-            return realStr + thinSpace + "+" + thinSpace + imagStr + thinSpace + "𝒊"
+    public func string<Element>(for number: Complex<Element>) -> String?{
+        if Element.self is Double.Type{
+            guard let realStr = realNumberFormatter.string(for: number.real as! Double) else{
+                return nil
+            }
+            guard let imagStr = realNumberFormatter.string(for: number.imag as! Double) else{
+                return nil
+            }
+            if complexPrintingType == .algebraic{
+                let thinSpace = usesThinSpaces ? StringSubstituter.thinSpace : ""
+                return realStr + thinSpace + "+" + thinSpace + imagStr + thinSpace + "𝒊"
+            }else{
+                return "(" + realStr + ", " + imagStr + ")"
+            }
+        }else if Element.self is Float.Type{
+            guard let realStr = realNumberFormatter.string(for: number.real as! Float) else{
+                return nil
+            }
+            guard let imagStr = realNumberFormatter.string(for: number.imag as! Float) else{
+                return nil
+            }
+            if complexPrintingType == .algebraic{
+                let thinSpace = usesThinSpaces ? StringSubstituter.thinSpace : ""
+                return realStr + thinSpace + "+" + thinSpace + imagStr + thinSpace + "𝒊"
+            }else{
+                return "(" + realStr + ", " + imagStr + ")"
+            }
         }else{
-            return "(" + realStr + ", " + imagStr + ")"
+            guard let realStr = realNumberFormatter.string(for: number.real) else{
+                return nil
+            }
+            guard let imagStr = realNumberFormatter.string(for: number.imag) else{
+                return nil
+            }
+            if complexPrintingType == .algebraic{
+                let thinSpace = usesThinSpaces ? StringSubstituter.thinSpace : ""
+                return realStr + thinSpace + "+" + thinSpace + imagStr + thinSpace + "𝒊"
+            }else{
+                return "(" + realStr + ", " + imagStr + ")"
+            }
         }
     }
-    public func string(from: Complex<Any>) -> String?{
+    public func string<Element>(from: Complex<Element>) -> String?{
         string(for: from)
     }
 }

@@ -7,28 +7,34 @@ final class ComplexAccelerateTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
         //XCTAssertEqual(ComplexAccelerate().text, "Hello, World!")
-        let mat = Matrix<Double>(elements: [1,2,3,4], rowCount: 2, columnCount: 2)!
-        let mat2 = Matrix<Double>(elements: [5,6,7,8], rowCount: 2, columnCount: 2)!
-        //print(mat?.transpose)
-        print( Matrix<Double>.multiply(mat, mat2)!)
-        let a: [Double] = [1,2 ,-3]
-        print(Matrix.add(mat,mat2))
-        print(Vector.absolute(a))
-        Vector<Double>.multiply(a, a)
-        let b = Vector<Double>.geometricProgression(initialValue: 2, ratio: 2, count: 3)
-        print(b)
-        print(Polynomial<Float>(coefficients: [1,2,1]) * Polynomial<Float>(coefficients: [1,1]))
-        print(Polynomial<Double>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
-        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).degree)
-        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
-        print(Polynomial<Double>(coefficients: [1,2,3,8]) + Polynomial<Double>(coefficients: []))
-        var format = PolynomialFormatter()
-        format.numberFormatter = NumberFormatter()
-        format.numberFormatter?.minimumFractionDigits = 10
-        print(PolynomialFormatter().string(from: Polynomial<Double>(coefficients: [1,2,3,8]) ))
-        print(Polynomial<Complex<Double>>(coefficients: [.I,2+Complex.I,3,8]) )
-        print(Vector<Double>.create(repeating: 0, count: -1))
+        print("hey!")
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .none
+        formatter.minimumSignificantDigits = 2
+        print(formatter.string(from: 1e-20))
+        formatter.numberStyle = .spellOut
+        print(formatter.string(from: 1e-20))
+        formatter.numberStyle = .scientific
+        print(formatter.string(from: 1e-20))
+        formatter.numberStyle = .decimal
+        print(formatter.string(for: 1e-20))
         
-        print(AudioGain(inDecibels: 3.4))
+        let start = DispatchTime.now() // <<<<<<<<<< Start time
+        
+         let end = DispatchTime.now()   // <<<<<<<<<<   end time
+
+         let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+         let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+
+         print("Time to evaluate problem : \(timeInterval) seconds")
+        print(StringSubstituter.makeFancy("1E-4"))
+        print(StringSubstituter.makeFancy(0.12345678901234567890.description))
+        print(StringSubstituter.makeFancy(1.2345678000004567890e16.description, chops: true))
+        print(1.2345678000004567890e16.description)
+        print("003400".replacingOccurrences(of: "^0+", with: "", options: .regularExpression))
+        print("32.623.2".replacingOccurrences(of: ".", with: "", options: NSString.CompareOptions.literal, range: nil))
+        print("003400".replacingOccurrences(of: "0+$", with: "", options: .regularExpression))
+        print(ComplexFormatter().string(from: Complex<Double>(real:2, imag:1)))
+        print(ScientificNumberFormatter().string(for: 2.0))
     }
 }
