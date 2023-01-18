@@ -9,6 +9,8 @@ import Foundation
 
 /// Accomodates string substitution function.
 public class StringSubstituter{
+    public static let thinSpace = " "
+    
     /// Substitutes characters in the given character set to the characters in the other character set from the given string.
     ///
     /// This function, first, finds the chacracters in `find` from `from`. Then, nth character of `find` string would be substituted with nth character of `with`.

@@ -37,7 +37,7 @@ public struct AudioFrequency: ExpressibleByFloatLiteral{
     public init(inAudibleRangeLogScale: Double){
         self.inHertz = 20 * pow(10, (3 * inAudibleRangeLogScale))
     }
-    
+    @frozen
     public enum Note{
         /// The note a semitone below ``A``.
         case AFlat
