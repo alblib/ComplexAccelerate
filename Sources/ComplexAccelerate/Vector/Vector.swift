@@ -69,7 +69,7 @@ import Accelerate
 /// ```
 /// The explicit specializations of `Vector` are implemented for 6 types so 6 conditions are tested in the general implementation.
 /// So, to shorten the execution time, use direct call as possible.
-/// > Note: Dynamic specialization guarantees to call vDSP and other vecLib function as possible, but to shorten execution time, use direct specialization with explicit type name as possible.
+/// > Note: Dynamic specialization guarantees to call vDSP and other vecLib functions as possible, but to shorten execution time, please use direct specialization with explicit type name as possible.
 ///
 /// ### Error-proof
 /// Functions in this namespace are specified to avoid exceptions as possible.

@@ -36,5 +36,7 @@ final class ComplexAccelerateTests: XCTestCase {
         print("003400".replacingOccurrences(of: "0+$", with: "", options: .regularExpression))
         print(ComplexFormatter().string(from: Complex<Double>(real:2, imag:1)))
         print(ScientificNumberFormatter().string(for: 2.0))
+        print(Int64(+2).description)
+        print(PolynomialFormatter().string(from: Polynomial(coefficients: [1,2,4])))
     }
 }

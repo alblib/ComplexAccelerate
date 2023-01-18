@@ -8,40 +8,8 @@
 import Foundation
 
 /// Defines the style to convert ``Polynomial`` to `String`.
-internal class PolynomialFormatter{
+public class PolynomialFormatter{
     
-    internal static let thinSpace = " "
-    
-    internal struct Exponent: CustomStringConvertible{
-        private static let numericCharacterSet = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"]
-        private static let signCharacterSet = ["⁺", "⁻"]
-        
-        public let rawValue: Int64
-        public let forceSign: Bool
-        init(_ rawValue: Int64, forceSign: Bool = false) {
-            self.rawValue = rawValue
-            self.forceSign = forceSign
-        }
-        
-        public var description: String{
-            var result: String = ""
-            let numeralString = abs(rawValue).description
-            result.reserveCapacity(numeralString.count + 1)
-            
-            if forceSign && rawValue > 0{
-                result = Self.signCharacterSet[0]
-            }else if rawValue < 0{
-                result = Self.signCharacterSet[1]
-            }
-            
-            result +=
-                numeralString.unicodeScalars.map{char in
-                    Self.numericCharacterSet[Int(char.value - UnicodeScalar("0").value)]
-                }.joined()
-            
-            return result
-        }
-    }
     
     public struct Monomial: CustomStringConvertible, ExpressibleByStringLiteral{
         public let product: [(symbol: String, exponent: Int64)]
@@ -74,7 +42,6 @@ internal class PolynomialFormatter{
         public static func pow(_ base: Self, _ exponent: Int) -> Self{
             pow(base, Int64(exponent))
         }
-        
         public var description: String{
             product.sorted(by: { $0.symbol < $1.symbol}).map{
                 switch $0.exponent{
@@ -83,9 +50,9 @@ internal class PolynomialFormatter{
                 case 1:
                     return $0.symbol
                 default:
-                    return $0.symbol + Exponent($0.exponent).description
+                    return $0.symbol + StringSubstituter.convertToSuperscript($0.exponent.description)
                 }
-            }.joined(separator: thinSpace)
+            }.joined(separator: StringSubstituter.thinSpace)
         }
     }
     
@@ -97,7 +64,8 @@ internal class PolynomialFormatter{
     /// Defines whether to omit the terms with zero coefficients.
     public var omitsMonomials: Bool = true
     
-    public init(){}
+    public init(){
+    }
     public init(variable: Monomial){
         self.variable = variable
     }
@@ -157,7 +125,7 @@ internal class PolynomialFormatter{
             }else if $0.0 == "1"{
                 return $0.1
             }else{
-                return $0.0 + Self.thinSpace + $0.1
+                return $0.0 + StringSubstituter.thinSpace + $0.1
             }
         }
         for i in 1..<termStrList.count{
