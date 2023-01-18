@@ -53,7 +53,7 @@ public class StringSubstituter{
             with: "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₕᵢⱼₖₗₘₙₒₚᵣₛₜᵤᵥₓᵦᵦᵦᵧᵧᵧᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵨᵩᵩᵪ")
     }
     /// Converts the scientific style floating point description to human-written style.
-    public static func makeFancy(_ scientific: String, isStrictlyScientific: Bool = false, usesThinSpaces: Bool = false) -> String{
+    public static func makeFancy(_ scientific: String, isStrictlyScientific: Bool = false, usesThinSpaces: Bool = false, chops: Bool = true) -> String{
         let thinSpace = usesThinSpaces ? " " : ""
         var Eseparated = scientific.split(separator: "e", maxSplits: 2)
         if Eseparated.count != 2{
@@ -62,7 +62,7 @@ public class StringSubstituter{
                 return scientific
             }
         }
-        let result = Eseparated[0] + thinSpace + "×" + thinSpace + "10" + convertToSuperscript(String(Eseparated[1]))
+        let result = Eseparated[0] + thinSpace + "×" + thinSpace + "10" + convertToSuperscript(String(Eseparated[1]).replacingOccurrences(of: "+", with: ""))
         if isStrictlyScientific{
             return result
         }
@@ -71,6 +71,19 @@ public class StringSubstituter{
         }else if ["0", "0.0"].contains(Eseparated[0]){
             return "0"
         }else{
+            if chops{
+                let pointRemoved = Eseparated[0]
+                    .replacingOccurrences(of: ".", with: "", options: NSString.CompareOptions.literal, range: nil)
+                let leadingZerosRemoved = pointRemoved.replacingOccurrences(of: "^0+", with: "", options: .regularExpression)
+                if leadingZerosRemoved.count < 14{
+                    return result
+                }
+                let trailingZerosRemoved = leadingZerosRemoved.prefix(14).replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+                if trailingZerosRemoved.count < leadingZerosRemoved.count - 5{
+                    let front = Eseparated[0].dropLast(5).replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+                    return front + thinSpace + "×" + thinSpace + "10" + convertToSuperscript(String(Eseparated[1]))
+                }
+            }
             return result
         }
     }
