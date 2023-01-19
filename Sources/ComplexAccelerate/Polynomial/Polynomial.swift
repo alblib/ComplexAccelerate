@@ -2,12 +2,16 @@
 //  Polynomial.swift
 //  
 //
-//  Created by Albertus Liberius on 2023-01-13.
+//  Created by Albertus Liberius on 2022-12-10, 2023-01-13.
 //
 
 import Foundation
 import Accelerate
 
+/// has inverse notation from vDSP.
+/// arithmetics and evaluations
+
+/// A structure representing a polynomial and implementing arithmetics between two of them and evaluation of it.
 public struct Polynomial<Coefficient>: ExpressibleByArrayLiteral
 {
     public var coefficients: [Coefficient]
@@ -25,6 +29,31 @@ public struct Polynomial<Coefficient>: ExpressibleByArrayLiteral
     }
     public var degree: Int{
         max(0, self.coefficients.count - 1)
+    }
+    
+    /// Exception-free coefficient dereference function.
+    ///
+    /// Calls the coefficient of `pow(x, order)` from the polynomial `f(x)`. If `order` exceeds the ``coefficients`` array, this returns zero.
+    /// - Returns: ``coefficients``​`[order]` if `order < coefficients.count`. Otherwise, zero.
+    /// - Parameter order: The exponent of the monomial, the coefficient of which is demanded.
+    public func coefficient(order: Int) -> Coefficient
+    where Coefficient: AdditiveArithmetic
+    {
+        if order < coefficients.count{
+            return coefficients[order]
+        }else{
+            return .zero
+        }
+    }
+    /// Gives coefficients of given multiple monomials.
+    ///
+    /// Gives the coefficients of the monomials, the exponents of which is given by `ordersOfTerms`.
+    /// - Parameter ordersOfTerms: The exponents representing the monomials we demand.
+    /// - Returns: The coefficients of the monomials we gave.
+    public func coefficients(ordersOfTerms: [Int]) -> [Coefficient]
+    where Coefficient: AdditiveArithmetic
+    {
+        ordersOfTerms.map{self.coefficient(order: $0)}
     }
 }
 
@@ -50,6 +79,17 @@ extension Polynomial where Coefficient: AdditiveArithmetic{
                 }
             }
             return 0
+        }
+    }
+}
+
+extension Polynomial: CustomStringConvertible where Coefficient: AdditiveArithmetic & CustomStringConvertible{
+    public var description: String{
+        print(Coefficient.self)
+        if Coefficient.self is any GenericComplex.Type{
+            return PolynomialFormatter(variable: PolynomialFormatter.Monomial("𝑧")).string(from: self)
+        }else{
+            return PolynomialFormatter().string(from: self)
         }
     }
 }
@@ -773,6 +813,32 @@ extension Polynomial where Coefficient == DSPDoubleComplex{
     }
     public func evaluate(variable z: DSPDoubleComplex) -> DSPDoubleComplex{
         _evaluate(variables: [z])[0]
+    }
+}
+
+
+extension Polynomial where Coefficient == Float{
+    public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [Complex<Float>]
+    {
+        let exponents: [Float] = vDSP.ramp(withInitialValue: 0, increment: 1, count: self.coefficients.count)
+        let exponentMatrix = Matrix<Float>(elements: exponents, rowCount: 1, columnCount: exponents.count)!
+        let phaseMatrix = Matrix<Float>(elements: phases, rowCount: phases.count, columnCount: 1)!
+        let phaseRectangleMatrix = Matrix.multiply(phaseMatrix, exponentMatrix)!
+        let unitComplexMatrix = Matrix(elements: Vector<Complex<Float>>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
+        let coefficientMatrix = Matrix(elements: Vector<Complex<Float>>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
+        return Matrix.multiply(unitComplexMatrix, coefficientMatrix)!.elements
+    }
+}
+extension Polynomial where Coefficient == Double{
+    public func evaluate(withUnitComplexesOfPhases phases: [Double]) -> [Complex<Double>]
+    {
+        let exponents: [Double] = vDSP.ramp(withInitialValue: 0, increment: 1, count: self.coefficients.count)
+        let exponentMatrix = Matrix<Double>(elements: exponents, rowCount: 1, columnCount: exponents.count)!
+        let phaseMatrix = Matrix<Double>(elements: phases, rowCount: phases.count, columnCount: 1)!
+        let phaseRectangleMatrix = Matrix.multiply(phaseMatrix, exponentMatrix)!
+        let unitComplexMatrix = Matrix(elements: Vector<Complex<Double>>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
+        let coefficientMatrix = Matrix(elements: Vector<Complex<Double>>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
+        return Matrix.multiply(unitComplexMatrix, coefficientMatrix)!.elements
     }
 }
 

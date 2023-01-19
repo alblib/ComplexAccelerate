@@ -183,6 +183,7 @@ extension Vector where Element: GenericComplex, Element.Real == Float{
             realInitializedCount = count
         })
         return (reals: real, imaginaries: imag)
+        // same as vDSP.convert(interleavedComplexVector: <#T##[DSPComplex]#>, toSplitComplexVector: &<#T##DSPSplitComplex#>)
     }
     
     /// Combine an array of real parts and an array of imaginary parts to make the array of complex numbers.

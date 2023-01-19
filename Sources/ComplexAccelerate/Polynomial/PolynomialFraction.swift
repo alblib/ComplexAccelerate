@@ -17,6 +17,9 @@ public struct PolynomialFraction<Coefficient>
         self.numerator = numerator
         self.denominator = denominator
     }
+    public var order: Int{
+        max(numerator.degree, denominator.degree)
+    }
 }
 extension PolynomialFraction where Coefficient: ExpressibleByIntegerLiteral{
     public static var zero: Self{
@@ -529,6 +532,20 @@ extension PolynomialFraction where Coefficient == DSPDoubleComplex{
     }
     public func evaluate(variable values: [Coefficient]) -> [Coefficient]{
         Vector<Coefficient>.divide(self.numerator.evaluate(variable: values), self.denominator.evaluate(variable: values))
+    }
+}
+
+
+extension PolynomialFraction where Coefficient == Float{
+    public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [Complex<Float>]
+    {
+        Vector.divide(numerator.evaluate(withUnitComplexesOfPhases: phases), denominator.evaluate(withUnitComplexesOfPhases: phases))
+    }
+}
+extension PolynomialFraction where Coefficient == Double{
+    public func evaluate(withUnitComplexesOfPhases phases: [Double]) -> [Complex<Double>]
+    {
+        Vector.divide(numerator.evaluate(withUnitComplexesOfPhases: phases), denominator.evaluate(withUnitComplexesOfPhases: phases))
     }
 }
 

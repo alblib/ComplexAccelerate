@@ -29,7 +29,10 @@ public extension Vector where Element == Float{
     
     static func create(repeating: Float, count: Int) -> [Float]
     {
-        [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
+        guard count > 0 else{
+            return []
+        }
+        return [Element](unsafeUninitializedCapacity: count) { buffer, initializedCount in
             guard let oPtr = buffer.baseAddress else{
                 return
             }

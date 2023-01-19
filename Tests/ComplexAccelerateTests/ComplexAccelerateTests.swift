@@ -1,5 +1,7 @@
 import XCTest
 @testable import ComplexAccelerate
+import Accelerate
+
 
 final class ComplexAccelerateTests: XCTestCase {
     func testExample() throws {
@@ -7,20 +9,18 @@ final class ComplexAccelerateTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
         //XCTAssertEqual(ComplexAccelerate().text, "Hello, World!")
-        let mat = Matrix<Double>(elements: [1,2,3,4], rowCount: 2, columnCount: 2)!
-        let mat2 = Matrix<Double>(elements: [5,6,7,8], rowCount: 2, columnCount: 2)!
-        //print(mat?.transpose)
-        print( Matrix<Double>.multiply(mat, mat2)!)
-        let a: [Double] = [1,2 ,-3]
-        print(Matrix.add(mat,mat2))
-        print(Vector.absolute(a))
-        Vector<Double>.multiply(a, a)
-        let b = Vector<Double>.geometricProgression(initialValue: 2, ratio: 2, count: 3)
-        print(b)
-        print(Polynomial<Float>(coefficients: [1,2,1]) * Polynomial<Float>(coefficients: [1,1]))
-        print(Polynomial<Double>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
-        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).degree)
-        print(Polynomial<Complex<Double>>(coefficients: [1,2,3,8]).evaluate(variable: Complex(real: 2, imag:1)))
-        print(Polynomial<Double>(coefficients: [1,2,3,8]) + Polynomial<Double>(coefficients: []))
+        let start = DispatchTime.now() // <<<<<<<<<< Start time
+        print(Vector.createFrequenciesLogScale(in: 20...20000, count: 10))
+        print(AudioGain(byAmplitude: 0.5))
+        print( AnalogTransferFunction.firstOrderLowPassFilter(cutoffFrequency: 1000).sExpression.evaluate(variable: Complex.I * 10000))
+        print(Vector.angularVelocities(of: [1000]))
+        print(Vector<DSPDoubleComplex>.multiply(DSPDoubleComplex(real: 0, imag: 1), Vector<DSPDoubleComplex>.castToComplexes(Vector.angularVelocities(of: [1000]))))
+        print(AnalogTransferFunction.firstOrderLowPassFilter(cutoffFrequency: 1000).gainFrequencyResponse())
+         let end = DispatchTime.now()   // <<<<<<<<<<   end time
+
+         let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+         let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+
+         print("Time to evaluate problem : \(timeInterval) seconds")
     }
 }

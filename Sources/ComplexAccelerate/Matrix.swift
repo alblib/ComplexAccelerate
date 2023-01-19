@@ -8,6 +8,8 @@
 import Foundation
 import Accelerate
 
+
+/// A structure implementing a matrix and its arithmetics parallely.
 public struct Matrix<Element>{
     public var elements: [Element]
     public var rowCount: Int
@@ -32,10 +34,20 @@ public struct Matrix<Element>{
         let indexEnd = (index + 1) * columnCount
         return Array(elements[indexBase..<indexEnd])
     }
-
+}
+extension Matrix where Element: AdditiveArithmetic & ExpressibleByIntegerLiteral{
+    public static func identity(n: Int) -> Matrix{
+        var elements = Vector<Element>.zeros(count: n * n)
+        for i in 0..<n{
+            elements[i * (n+1)] = 1
+        }
+        return Matrix(elements: elements, rowCount: n, columnCount: n)!
+    }
 }
 
+
 extension Matrix: ExpressibleByArrayLiteral{
+    /// Creates a vertical vector matrix.
     public init(arrayLiteral elements: Element...) {
         self.elements = elements
         self.rowCount = self.elements.count
@@ -149,16 +161,31 @@ public extension Matrix where Element == DSPDoubleComplex{
 
 extension Matrix{
     public var transpose: Self{
-        let arrayCount = rowCount * columnCount
-        let array = [Element](unsafeUninitializedCapacity: arrayCount) { buffer, initializedCount in
-            for i in 0..<rowCount{
-                for j in 0..<columnCount{
-                    (buffer.baseAddress! + j * rowCount + i).initialize(to: elements[i * columnCount + j])
+        switch Element.self{
+        case is Float.Type:
+            return (self as! Matrix<Float>).transpose as! Matrix<Element>
+        case is Double.Type:
+            return (self as! Matrix<Double>).transpose as! Matrix<Element>
+        case is DSPComplex.Type:
+            return (self as! Matrix<DSPComplex>).transpose as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return (self as! Matrix<DSPDoubleComplex>).transpose as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return (self as! Matrix<Complex<Float>>).transpose as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return (self as! Matrix<Complex<Double>>).transpose as! Matrix<Element>
+        default:
+            let arrayCount = rowCount * columnCount
+            let array = [Element](unsafeUninitializedCapacity: arrayCount) { buffer, initializedCount in
+                for i in 0..<rowCount{
+                    for j in 0..<columnCount{
+                        (buffer.baseAddress! + j * rowCount + i).initialize(to: elements[i * columnCount + j])
+                    }
                 }
+                initializedCount = arrayCount
             }
-            initializedCount = arrayCount
+            return Self(elements: array, rowCount: columnCount, columnCount: rowCount)!
         }
-        return Self(elements: array, rowCount: columnCount, columnCount: rowCount)!
     }
 }
 
@@ -231,27 +258,150 @@ public extension Matrix where Element == DSPDoubleComplex{
     var transpose: Self { _transpose }
 }
 
-// MARK: - Multiplication
+
+// MARK: - Scalar Multiplication
+
 
 extension Matrix where Element: Numeric{
-    public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>? {
-        guard matrixA.columnCount == matrixB.rowCount else{
-            return nil
+    public static func * (_ scalar: Element, _ matrix: Matrix<Element>) -> Matrix<Element>{
+        switch Element.self{
+        case is Float.Type:
+            return ((scalar as! Float) * (matrix as! Matrix<Float>)) as! Matrix<Element>
+        case is Double.Type:
+            return ((scalar as! Double) * (matrix as! Matrix<Double>)) as! Matrix<Element>
+        case is DSPComplex.Type:
+            return ((scalar as! DSPComplex) * (matrix as! Matrix<DSPComplex>)) as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return ((scalar as! DSPDoubleComplex) * (matrix as! Matrix<DSPDoubleComplex>)) as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return ((scalar as! Complex<Float>) * (matrix as! Matrix<Complex<Float>>)) as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return ((scalar as! Complex<Double>) * (matrix as! Matrix<Complex<Double>>)) as! Matrix<Element>
+        default:
+            return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
         }
-        var array = [Element](repeating: .zero, count: matrixA.rowCount * matrixB.columnCount)
-        for i in 0..<matrixA.rowCount{
-            for j in 0..<matrixB.columnCount{
-                for k in 0..<matrixA.columnCount{
-                    array[i * matrixB.columnCount + j] += matrixA.elements[i * matrixA.columnCount + k] * matrixB.elements[k * matrixB.columnCount + j]
-                }
-            }
+    }
+    public static func * (_ matrix: Matrix<Element>, _ scalar: Element) -> Matrix<Element>{
+        switch Element.self{
+        case is Float.Type:
+            return ((matrix as! Matrix<Float>) * (scalar as! Float)) as! Matrix<Element>
+        case is Double.Type:
+            return ((matrix as! Matrix<Double>) * (scalar as! Double)) as! Matrix<Element>
+        case is DSPComplex.Type:
+            return ((matrix as! Matrix<DSPComplex>) * (scalar as! DSPComplex)) as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return ((matrix as! Matrix<DSPDoubleComplex>) * (scalar as! DSPDoubleComplex) ) as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return ((matrix as! Matrix<Complex<Float>>) * (scalar as! Complex<Float>) ) as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return ((matrix as! Matrix<Complex<Double>>) * (scalar as! Complex<Double>) ) as! Matrix<Element>
+        default:
+            return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
         }
-        return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
     }
 }
 
-public extension Matrix where Element == Float{
-    static func multiply(_ matrixA: Matrix<Float>, _ matrixB: Matrix<Float>) -> Matrix<Float>? {
+extension Matrix where Element == Float{
+    public static func * (_ scalar: Float, _ matrix: Matrix<Float>) -> Matrix<Float>{
+        return Matrix(elements: vDSP.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<Float>, _ scalar: Float) -> Matrix<Float>{
+        return Matrix(elements: vDSP.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+extension Matrix where Element == Double{
+    public static func * (_ scalar: Double, _ matrix: Matrix<Double>) -> Matrix<Double>{
+        return Matrix(elements: vDSP.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<Double>, _ scalar: Double) -> Matrix<Double>{
+        return Matrix(elements: vDSP.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+extension Matrix where Element == DSPComplex{
+    public static func * (_ scalar: DSPComplex, _ matrix: Matrix<DSPComplex>) -> Matrix<DSPComplex>{
+        return Matrix(elements: Vector<DSPComplex>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<DSPComplex>, _ scalar: DSPComplex) -> Matrix<DSPComplex>{
+        return Matrix(elements: Vector<DSPComplex>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+extension Matrix where Element == DSPDoubleComplex{
+    public static func * (_ scalar: DSPDoubleComplex, _ matrix: Matrix<DSPDoubleComplex>) -> Matrix<DSPDoubleComplex>{
+        return Matrix(elements: Vector<DSPDoubleComplex>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<DSPDoubleComplex>, _ scalar: DSPDoubleComplex) -> Matrix<DSPDoubleComplex>{
+        return Matrix(elements: Vector<DSPDoubleComplex>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+extension Matrix where Element == Complex<Float>{
+    public static func * (_ scalar: Complex<Float>, _ matrix: Matrix<Complex<Float>>) -> Matrix<Complex<Float>>{
+        return Matrix(elements: Vector<Complex<Float>>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<Complex<Float>>, _ scalar: Complex<Float>) -> Matrix<Complex<Float>>{
+        return Matrix(elements: Vector<Complex<Float>>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+extension Matrix where Element == Complex<Double>{
+    public static func * (_ scalar: Complex<Double>, _ matrix: Matrix<Complex<Double>>) -> Matrix<Complex<Double>>{
+        return Matrix(elements: Vector<Complex<Double>>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+    public static func * (_ matrix: Matrix<Complex<Double>>, _ scalar: Complex<Double>) -> Matrix<Complex<Double>>{
+        return Matrix(elements: Vector<Complex<Double>>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+    }
+}
+
+
+
+
+// MARK: - Matrix Multiplication
+
+extension Matrix where Element: Numeric{
+    public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>?
+    {
+        switch Element.self{
+        case is Float.Type:
+            return Matrix<Float>.multiply(matrixA as! Matrix<Float>, matrixB as! Matrix<Float>) as? Matrix<Element>
+        case is Double.Type:
+            return Matrix<Double>.multiply(matrixA as! Matrix<Double>, matrixB as! Matrix<Double>) as? Matrix<Element>
+        case is DSPComplex.Type:
+            return Matrix<DSPComplex>.multiply(matrixA as! Matrix<DSPComplex>, matrixB as! Matrix<DSPComplex>) as? Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return Matrix<DSPDoubleComplex>.multiply(matrixA as! Matrix<DSPDoubleComplex>, matrixB as! Matrix<DSPDoubleComplex>) as? Matrix<Element>
+        case is Complex<Float>.Type:
+            return Matrix<Complex<Float>>.multiply(matrixA as! Matrix<Complex<Float>>, matrixB as! Matrix<Complex<Float>>) as? Matrix<Element>
+        case is Complex<Double>.Type:
+            return Matrix<Complex<Double>>.multiply(matrixA as! Matrix<Complex<Double>>, matrixB as! Matrix<Complex<Double>>) as? Matrix<Element>
+        default:
+            guard matrixA.columnCount == matrixB.rowCount else{
+                return nil
+            }
+            var array = [Element](repeating: .zero, count: matrixA.rowCount * matrixB.columnCount)
+            for i in 0..<matrixA.rowCount{
+                for j in 0..<matrixB.columnCount{
+                    for k in 0..<matrixA.columnCount{
+                        array[i * matrixB.columnCount + j] += matrixA.elements[i * matrixA.columnCount + k] * matrixB.elements[k * matrixB.columnCount + j]
+                    }
+                }
+            }
+            return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
+        }
+    }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
+}
+
+extension Matrix where Element == Float{
+    public static func multiply(_ matrixA: Matrix<Float>, _ matrixB: Matrix<Float>) -> Matrix<Float>? {
         guard matrixA.columnCount == matrixB.rowCount else{
             return nil
         }
@@ -264,6 +414,13 @@ public extension Matrix where Element == Float{
             initializedCount = outCount
         }
         return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
+    }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 
@@ -281,6 +438,13 @@ extension Matrix where Element == Double{
             initializedCount = outCount
         }
         return Matrix<Double>(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
+    }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 
@@ -328,11 +492,25 @@ public extension Matrix where Element == Complex<Float>{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
     }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
 }
 
 public extension Matrix where Element == DSPComplex{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
+    }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 
@@ -340,10 +518,24 @@ public extension Matrix where Element == Complex<Double>{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
     }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
 }
 
 public extension Matrix where Element == DSPDoubleComplex{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
+    }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
