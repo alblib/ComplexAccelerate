@@ -51,99 +51,13 @@ extension AnalogTransferFunction: TransferFunction{
         return (B0 * A1 - B1 * A0) / (B0 * A0)
     }
     
-    /*
-    public func frequencyResponse(_ frequency: AudioFrequency) -> DSPDoubleComplex{
-        let order = self.sExpression.order
-        let orderCounting = vDSP.integerToFloatingPoint(Array(Int32(0)...Int32(order)), floatingPointType: Double.self)
-        let omegaNPowers = vForce.pow(base: frequency.angularVelocity, exponents: orderCounting)
-        let denominator = vDSP.multiply(omegaNPowers[0..<self.sExpression.denominator.coefficients.count], self.sExpression.denominator.coefficients)
-        let numerator = vDSP.multiply(omegaNPowers[0..<self.sExpression.numerator.coefficients.count], self.sExpression.numerator.coefficients)
-        print(denominator, numerator)
-        let denominatorComplex =
-            denominator.withUnsafeBufferPointer { ptr in
-                let denPtr = ptr.baseAddress!
-                var denMod0: Double = 0
-                vDSP_sveD(denPtr, vDSP_Stride(4), &denMod0, vDSP_Length((denominator.count+3) / 4))
-                var denMod1: Double = 0
-                vDSP_sveD(denPtr + 1, vDSP_Stride(4), &denMod1, vDSP_Length((denominator.count+2) / 4))
-                var denMod2: Double = 0
-                vDSP_sveD(denPtr + 2, vDSP_Stride(4), &denMod2, vDSP_Length((denominator.count+1) / 4))
-                var denMod3: Double = 0
-                vDSP_sveD(denPtr + 3, vDSP_Stride(4), &denMod3, vDSP_Length((denominator.count) / 4))
-                return DSPDoubleComplex(real: denMod0 - denMod2, imag: denMod1 - denMod3)
-            }
-        let numeratorComplex =
-            numerator.withUnsafeBufferPointer { numPtr in
-                let ptr = numPtr.baseAddress!
-                var numMod0: Double = 0
-                vDSP_sveD(ptr, vDSP_Stride(4), &numMod0, vDSP_Length((numerator.count+3) / 4))
-                var numMod1: Double = 0
-                vDSP_sveD(ptr + 1, vDSP_Stride(4), &numMod1, vDSP_Length((numerator.count+2) / 4))
-                var numMod2: Double = 0
-                vDSP_sveD(ptr + 2, vDSP_Stride(4), &numMod2, vDSP_Length((numerator.count+1) / 4))
-                var numMod3: Double = 0
-                vDSP_sveD(ptr + 3, vDSP_Stride(4), &numMod3, vDSP_Length((numerator.count) / 4))
-                return DSPDoubleComplex(real: numMod0 - numMod2, imag: numMod1 - numMod3)
-            }
-        return numeratorComplex / denominatorComplex
-    }
-    */
     public func frequencyResponse(_ frequencies: [AudioFrequency]) -> [DSPDoubleComplex]{
-        if frequencies.isEmpty{
-            return []
-        }
-        let parallelOmegas = Vector.angularVelocities(of: frequencies)
-        var omegaNPowers: [[Double]] = Array(repeating: [], count: max(2, self.sExpression.order + 1))
-        omegaNPowers[0] = Array(repeating: 1, count: parallelOmegas.count)
-        omegaNPowers[1] = parallelOmegas
-        for i in 2..<omegaNPowers.count{
-            omegaNPowers[i] = vDSP.multiply(parallelOmegas, omegaNPowers[i-1])
-        }
-        //resultReal: [Double] = Array(repeating: 0, count: omegaNPowers.first!.count)
-        //resultImag: [Double] = Array(repeating: 0, count: omegaNPowers.first!.count)
-        func sRealization(coefficients: [Double], omegaNPowers: [[Double]], resultReal: inout [Double], resultImag: inout [Double]){
-            for i in 0..<(coefficients.count+3)/4{
-                let index = 4*i
-                resultReal = vDSP.add(multiplication: (a: omegaNPowers[index], b: coefficients[index]), resultReal)
-            }
-            for i in 0..<(coefficients.count+2)/4{
-                let index = 4*i+1
-                resultImag = vDSP.add(multiplication: (a: omegaNPowers[index], b: coefficients[index]), resultImag)
-            }
-            for i in 0..<(coefficients.count+1)/4{
-                let index = 4*i+2
-                resultReal = vDSP.add(multiplication: (a: omegaNPowers[index], b: -coefficients[index]), resultReal)
-            }
-            for i in 0..<(coefficients.count)/4{
-                let index = 4*i+3
-                resultImag = vDSP.add(multiplication: (a: omegaNPowers[index], b: -coefficients[index]), resultImag)
-            }
-        }
-        var numReal: [Double] = Array(repeating: 0, count: frequencies.count)
-        var numImag: [Double] = Array(repeating: 0, count: frequencies.count)
-        var denReal: [Double] = Array(repeating: 0, count: frequencies.count)
-        var denImag: [Double] = Array(repeating: 0, count: frequencies.count)
-        sRealization(coefficients: self.sExpression.numerator.coefficients, omegaNPowers: omegaNPowers, resultReal: &numReal, resultImag: &numImag)
-        sRealization(coefficients: self.sExpression.denominator.coefficients, omegaNPowers: omegaNPowers, resultReal: &denReal, resultImag: &denImag)
-        
-        var numRP = UnsafeMutablePointer(mutating: numReal)
-        var numIP = UnsafeMutablePointer(mutating: numImag)
-        var denRP = UnsafeMutablePointer(mutating: denReal)
-        var denIP = UnsafeMutablePointer(mutating: denImag)
-        var numP = DSPDoubleSplitComplex(realp: numRP, imagp: numIP)
-        var denP = DSPDoubleSplitComplex(realp: denRP, imagp: denIP)
-        var resultReal: [Double] = Array(repeating: 0, count: frequencies.count)
-        var resultImag: [Double] = Array(repeating: 0, count: frequencies.count)
-        var resultRP = UnsafeMutablePointer(mutating: resultReal)
-        var resultIP = UnsafeMutablePointer(mutating: resultImag)
-        var resultP = DSPDoubleSplitComplex(realp: resultRP, imagp: resultIP)
-        vDSP.divide(numP, by: denP, count: frequencies.count, result: &resultP)
-        var result = Array(repeating: DSPDoubleComplex(), count: frequencies.count)
-        vDSP.convert(splitComplexVector: resultP, toInterleavedComplexVector: &result)
-        return result
+        let s = Vector<DSPDoubleComplex>.multiply(DSPDoubleComplex(real: 0, imag: 1), Vector<DSPDoubleComplex>.castToComplexes(Vector.angularVelocities(of: frequencies)))
+        return Vector.divide(
+            self.sExpression.numerator.evaluate(variable: s),
+            self.sExpression.denominator.evaluate(variable: s))
     }
 }
-
 
 
 // MARK: - Filters
