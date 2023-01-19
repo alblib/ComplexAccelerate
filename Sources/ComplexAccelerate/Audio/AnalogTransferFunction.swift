@@ -18,11 +18,11 @@ public struct AnalogTransferFunction{
     public var identity: Self{
         AnalogTransferFunction(sExpression: .one)
     }
-    /*
+    
     public func bilinearTransformToDigital(sampleRate: AudioFrequency) -> DigitalTransferFunction{
         let zTransform = 2 * sampleRate.inHertz * PolynomialFraction(numerator: .init(coefficients: [1, -1]), denominator: .init(coefficients: [1, 1]))
-        return DigitalTransferFunction(zInverseExpression: sExpression.substitute(variableBy: zTransform), sampleRate: sampleRate)
-    }*/
+        return DigitalTransferFunction(zInverseExpression: sExpression.substitute(variable: zTransform), sampleRate: sampleRate)
+    }
 }
 
 
@@ -51,11 +51,10 @@ extension AnalogTransferFunction: TransferFunction{
         return (B0 * A1 - B1 * A0) / (B0 * A0)
     }
     
-    public func frequencyResponse(_ frequencies: [AudioFrequency]) -> [DSPDoubleComplex]{
-        let s = Vector<DSPDoubleComplex>.multiply(DSPDoubleComplex(real: 0, imag: 1), Vector<DSPDoubleComplex>.castToComplexes(Vector.angularVelocities(of: frequencies)))
-        return Vector.divide(
-            self.sExpression.numerator.evaluate(variable: s),
-            self.sExpression.denominator.evaluate(variable: s))
+    /// Calculates the values of the transfer function 𝐻(𝑠 = 2𝜋𝑖𝑓)) parallely for each tab.
+    public func frequencyResponse(_ frequencies: [AudioFrequency]) -> [Complex<Double>]{
+        let s = Vector<Complex<Double>>.multiply(Complex<Double>.I, Vector<Complex<Double>>.castToComplexes(Vector.angularVelocities(of: frequencies)))
+        return sExpression.evaluate(variable: s)
     }
 }
 

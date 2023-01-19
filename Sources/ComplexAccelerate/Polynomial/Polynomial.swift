@@ -818,26 +818,26 @@ extension Polynomial where Coefficient == DSPDoubleComplex{
 
 
 extension Polynomial where Coefficient == Float{
-    public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [DSPComplex]
+    public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [Complex<Float>]
     {
         let exponents: [Float] = vDSP.ramp(withInitialValue: 0, increment: 1, count: self.coefficients.count)
         let exponentMatrix = Matrix<Float>(elements: exponents, rowCount: 1, columnCount: exponents.count)!
         let phaseMatrix = Matrix<Float>(elements: phases, rowCount: phases.count, columnCount: 1)!
         let phaseRectangleMatrix = Matrix.multiply(phaseMatrix, exponentMatrix)!
-        let unitComplexMatrix = Matrix(elements: Vector<DSPComplex>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
-        let coefficientMatrix = Matrix(elements: Vector<DSPComplex>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
+        let unitComplexMatrix = Matrix(elements: Vector<Complex<Float>>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
+        let coefficientMatrix = Matrix(elements: Vector<Complex<Float>>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
         return Matrix.multiply(unitComplexMatrix, coefficientMatrix)!.elements
     }
 }
 extension Polynomial where Coefficient == Double{
-    public func evaluate(withUnitComplexesOfPhases phases: [Double]) -> [DSPDoubleComplex]
+    public func evaluate(withUnitComplexesOfPhases phases: [Double]) -> [Complex<Double>]
     {
         let exponents: [Double] = vDSP.ramp(withInitialValue: 0, increment: 1, count: self.coefficients.count)
         let exponentMatrix = Matrix<Double>(elements: exponents, rowCount: 1, columnCount: exponents.count)!
         let phaseMatrix = Matrix<Double>(elements: phases, rowCount: phases.count, columnCount: 1)!
         let phaseRectangleMatrix = Matrix.multiply(phaseMatrix, exponentMatrix)!
-        let unitComplexMatrix = Matrix(elements: Vector<DSPDoubleComplex>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
-        let coefficientMatrix = Matrix(elements: Vector<DSPDoubleComplex>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
+        let unitComplexMatrix = Matrix(elements: Vector<Complex<Double>>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)! // phases.count x exponents.count
+        let coefficientMatrix = Matrix(elements: Vector<Complex<Double>>.castToComplexes(self.coefficients), rowCount: self.coefficients.count, columnCount: 1)!
         return Matrix.multiply(unitComplexMatrix, coefficientMatrix)!.elements
     }
 }

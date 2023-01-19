@@ -9,7 +9,7 @@ import Foundation
 import Accelerate
 
 public protocol TransferFunction{
-    func frequencyResponse(_ frequencies: [AudioFrequency]) -> [DSPDoubleComplex]
+    func frequencyResponse(_ frequencies: [AudioFrequency]) -> [Complex<Double>]
     var bassGain: AudioGain { get }
     var bassGroupDelay: TimeInterval { get }
     func gainFrequencyResponse(_ frequencies: [AudioFrequency]) -> [AudioGain]

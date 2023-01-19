@@ -535,6 +535,20 @@ extension PolynomialFraction where Coefficient == DSPDoubleComplex{
     }
 }
 
+
+extension PolynomialFraction where Coefficient == Float{
+    public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [Complex<Float>]
+    {
+        Vector.divide(numerator.evaluate(withUnitComplexesOfPhases: phases), denominator.evaluate(withUnitComplexesOfPhases: phases))
+    }
+}
+extension PolynomialFraction where Coefficient == Double{
+    public func evaluate(withUnitComplexesOfPhases phases: [Double]) -> [Complex<Double>]
+    {
+        Vector.divide(numerator.evaluate(withUnitComplexesOfPhases: phases), denominator.evaluate(withUnitComplexesOfPhases: phases))
+    }
+}
+
 // MARK: - Substitution
 extension PolynomialFraction where Coefficient: Numeric{
     public func substitute(variable by: Self) -> Self{
