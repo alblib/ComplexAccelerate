@@ -161,16 +161,31 @@ public extension Matrix where Element == DSPDoubleComplex{
 
 extension Matrix{
     public var transpose: Self{
-        let arrayCount = rowCount * columnCount
-        let array = [Element](unsafeUninitializedCapacity: arrayCount) { buffer, initializedCount in
-            for i in 0..<rowCount{
-                for j in 0..<columnCount{
-                    (buffer.baseAddress! + j * rowCount + i).initialize(to: elements[i * columnCount + j])
+        switch Element.self{
+        case is Float.Type:
+            return (self as! Matrix<Float>).transpose as! Matrix<Element>
+        case is Double.Type:
+            return (self as! Matrix<Double>).transpose as! Matrix<Element>
+        case is DSPComplex.Type:
+            return (self as! Matrix<DSPComplex>).transpose as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return (self as! Matrix<DSPDoubleComplex>).transpose as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return (self as! Matrix<Complex<Float>>).transpose as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return (self as! Matrix<Complex<Double>>).transpose as! Matrix<Element>
+        default:
+            let arrayCount = rowCount * columnCount
+            let array = [Element](unsafeUninitializedCapacity: arrayCount) { buffer, initializedCount in
+                for i in 0..<rowCount{
+                    for j in 0..<columnCount{
+                        (buffer.baseAddress! + j * rowCount + i).initialize(to: elements[i * columnCount + j])
+                    }
                 }
+                initializedCount = arrayCount
             }
-            initializedCount = arrayCount
+            return Self(elements: array, rowCount: columnCount, columnCount: rowCount)!
         }
-        return Self(elements: array, rowCount: columnCount, columnCount: rowCount)!
     }
 }
 
@@ -249,10 +264,40 @@ public extension Matrix where Element == DSPDoubleComplex{
 
 extension Matrix where Element: Numeric{
     public static func * (_ scalar: Element, _ matrix: Matrix<Element>) -> Matrix<Element>{
-        return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+        switch Element.self{
+        case is Float.Type:
+            return ((scalar as! Float) * (matrix as! Matrix<Float>)) as! Matrix<Element>
+        case is Double.Type:
+            return ((scalar as! Double) * (matrix as! Matrix<Double>)) as! Matrix<Element>
+        case is DSPComplex.Type:
+            return ((scalar as! DSPComplex) * (matrix as! Matrix<DSPComplex>)) as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return ((scalar as! DSPDoubleComplex) * (matrix as! Matrix<DSPDoubleComplex>)) as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return ((scalar as! Complex<Float>) * (matrix as! Matrix<Complex<Float>>)) as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return ((scalar as! Complex<Double>) * (matrix as! Matrix<Complex<Double>>)) as! Matrix<Element>
+        default:
+            return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+        }
     }
     public static func * (_ matrix: Matrix<Element>, _ scalar: Element) -> Matrix<Element>{
-        return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+        switch Element.self{
+        case is Float.Type:
+            return ((matrix as! Matrix<Float>) * (scalar as! Float)) as! Matrix<Element>
+        case is Double.Type:
+            return ((matrix as! Matrix<Double>) * (scalar as! Double)) as! Matrix<Element>
+        case is DSPComplex.Type:
+            return ((matrix as! Matrix<DSPComplex>) * (scalar as! DSPComplex)) as! Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return ((matrix as! Matrix<DSPDoubleComplex>) * (scalar as! DSPDoubleComplex) ) as! Matrix<Element>
+        case is Complex<Float>.Type:
+            return ((matrix as! Matrix<Complex<Float>>) * (scalar as! Complex<Float>) ) as! Matrix<Element>
+        case is Complex<Double>.Type:
+            return ((matrix as! Matrix<Complex<Double>>) * (scalar as! Complex<Double>) ) as! Matrix<Element>
+        default:
+            return Matrix(elements: Vector<Element>.multiply(scalar, matrix.elements), rowCount: matrix.rowCount, columnCount: matrix.columnCount)!
+        }
     }
 }
 
