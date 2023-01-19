@@ -7,10 +7,10 @@
 
 import Foundation
 
-/// Defines the style to convert ``Polynomial`` to `String`.
+/// Defines the style to convert ``Polynomial`` and ``PolynomialFraction`` to `String`.
 public class PolynomialFormatter{
     
-    
+    /// Defines the indefinitive of the polynomial.
     public struct Monomial: CustomStringConvertible, ExpressibleByStringLiteral{
         public let product: [(symbol: String, exponent: Int64)]
         private init(product: [(symbol: String, exponent: Int64)]){

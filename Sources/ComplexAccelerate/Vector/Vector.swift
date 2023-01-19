@@ -147,6 +147,17 @@ public enum Vector<Element>{
             return [Element](repeating: repeating, count: count)
         }
     }
+    public static func copy<TheVector>(_ vector: TheVector) -> [Element]
+    where TheVector: AccelerateBuffer, TheVector.Element == Element{
+        [Element](unsafeUninitializedCapacity: vector.count) { oBuffer, initializedCount in
+            vector.withUnsafeBufferPointer { iBuffer in
+                let oP = UnsafeMutableRawBufferPointer(oBuffer)
+                let iP = UnsafeRawBufferPointer(iBuffer)
+                oP.copyMemory(from: iP)
+            }
+            initializedCount = vector.count
+        }
+    }
 }
 
 public extension Vector where Element: AdditiveArithmetic{

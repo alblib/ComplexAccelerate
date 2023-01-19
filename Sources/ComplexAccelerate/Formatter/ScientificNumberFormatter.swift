@@ -8,7 +8,7 @@
 import Foundation
 
 public class ScientificNumberFormatter: NumberFormatter{
-    /// Indicates whether the thin space is used in proper places when ``isHumanstyle`` is true. In console, the thin space has no proper width, so this is false by default. Turn this on for labels.
+    /// Indicates whether the thin space is used in proper places when ``isHumanStyle`` is true. In console, the thin space has no proper width, so this is false by default. Turn this on for labels.
     public var usesThinSpaces: Bool = false
     /// Indicates whether the scientific notation uses math symbols instead of machine notation.
     public var isHumanStyle: Bool = true

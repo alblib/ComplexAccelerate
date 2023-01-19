@@ -15,6 +15,7 @@
 ### Vector Creation
 - ``zeros(count:)-1gvl8``
 - ``create(repeating:count:)-28fsu``
+- ``copy(_:)``
 - ``arithmeticProgression(initialValue:increment:count:)-7krbs``
 - ``geometricProgression(initialValue:ratio:count:)-3b7o``
 

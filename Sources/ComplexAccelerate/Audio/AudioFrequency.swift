@@ -9,7 +9,7 @@ import Foundation
 import Accelerate
 
 
-public struct AudioFrequency: ExpressibleByFloatLiteral{
+public struct AudioFrequency: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral{
     public let inHertz: Double
     public var inOctave: Double{
         log2(inHertz / 440) + 4.75
@@ -24,6 +24,9 @@ public struct AudioFrequency: ExpressibleByFloatLiteral{
     
     public init(floatLiteral inHertz: Double){
         self.inHertz = abs(inHertz)
+    }
+    public init(integerLiteral value: Int) {
+        self.inHertz = Double(value)
     }
     public init(inHertz: Double){
         self.inHertz = abs(inHertz)
@@ -145,6 +148,18 @@ public extension AudioFrequency{
     static let sample_192kHz = AudioFrequency(inHertz: 192000)
 }
 
+extension AudioFrequency: Equatable{
+    public static func == (lhs: AudioFrequency, rhs: AudioFrequency) -> Bool{
+        lhs.inHertz == rhs.inHertz
+    }
+}
+
+extension AudioFrequency: Comparable{
+    public static func < (lhs: AudioFrequency, rhs: AudioFrequency) -> Bool{
+        lhs.inHertz < rhs.inHertz
+    }
+}
+
 public extension Vector where Element == AudioFrequency{
     static func frequenciesInHertz<AudioFrequencyArray>(of frequencies: AudioFrequencyArray) -> [Double]
     where AudioFrequencyArray: AccelerateBuffer, AudioFrequencyArray.Element == AudioFrequency
@@ -224,5 +239,9 @@ public extension Vector where Element == AudioFrequency{
     where FloatArray: AccelerateBuffer, FloatArray.Element == Float
     {
         create(audibleRangeLogScaleParameters: vDSP.floatToDouble(audibleRangeLogScaleParameters))
+    }
+    
+    static func createFrequenciesLogScale(in range: ClosedRange<AudioFrequency>, count: Int = 256) -> [AudioFrequency]{
+        create(frequenciesInHertz: Vector<Double>.geometricProgression(initialValue: range.lowerBound.inHertz, to: range.upperBound.inHertz, count: count))
     }
 }
