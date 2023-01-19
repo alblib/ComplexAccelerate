@@ -317,7 +317,6 @@ extension Matrix where Element == Complex<Double>{
 
 extension Matrix where Element: Numeric{
     public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>?
-    where Element: Numeric
     {
         switch Element.self{
         case is Float.Type:
@@ -348,7 +347,6 @@ extension Matrix where Element: Numeric{
         }
     }
     public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
-    where Element: Numeric
     {
         guard matrixA != nil && matrixB != nil else{
             return nil
@@ -372,6 +370,13 @@ extension Matrix where Element == Float{
         }
         return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
     }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
 }
 
 extension Matrix where Element == Double{
@@ -388,6 +393,13 @@ extension Matrix where Element == Double{
             initializedCount = outCount
         }
         return Matrix<Double>(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
+    }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 
@@ -435,11 +447,25 @@ public extension Matrix where Element == Complex<Float>{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
     }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
 }
 
 public extension Matrix where Element == DSPComplex{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
+    }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 
@@ -447,10 +473,24 @@ public extension Matrix where Element == Complex<Double>{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
     }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
+    }
 }
 
 public extension Matrix where Element == DSPDoubleComplex{
     static func multiply(_ matrixA: Self, _ matrixB: Self) -> Self? {
         return _multiply(matrixA, matrixB)
+    }
+    static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
