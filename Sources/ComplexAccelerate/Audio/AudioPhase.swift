@@ -117,6 +117,17 @@ extension Vector where Element == AudioPhase{
     {
         create(radians: vDSP.floatToDouble(radians))
     }
+    public static func create<DoubleVector>(degrees: DoubleVector) -> [AudioPhase]
+    where DoubleVector: AccelerateBuffer, DoubleVector.Element == Double
+    {
+        create(radians: vDSP.multiply(Double.pi / 180, degrees))
+    }
+    
+    public static func create<FloatVector>(degrees: FloatVector) -> [AudioPhase]
+    where FloatVector: AccelerateBuffer, FloatVector.Element == Float
+    {
+        create(radians: vDSP.multiply(Float.pi / 180, degrees))
+    }
     public static func createPhases<DSPDoubleComplexVector>(from complexNumbers: DSPDoubleComplexVector) -> [AudioPhase]
     where DSPDoubleComplexVector: AccelerateBuffer, DSPDoubleComplexVector.Element == DSPDoubleComplex
     {
