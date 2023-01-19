@@ -319,18 +319,41 @@ extension Matrix where Element: Numeric{
     public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>?
     where Element: Numeric
     {
-        guard matrixA.columnCount == matrixB.rowCount else{
-            return nil
-        }
-        var array = [Element](repeating: .zero, count: matrixA.rowCount * matrixB.columnCount)
-        for i in 0..<matrixA.rowCount{
-            for j in 0..<matrixB.columnCount{
-                for k in 0..<matrixA.columnCount{
-                    array[i * matrixB.columnCount + j] += matrixA.elements[i * matrixA.columnCount + k] * matrixB.elements[k * matrixB.columnCount + j]
+        switch Element.self{
+        case is Float.Type:
+            return Matrix<Float>.multiply(matrixA as! Matrix<Float>, matrixB as! Matrix<Float>) as? Matrix<Element>
+        case is Double.Type:
+            return Matrix<Double>.multiply(matrixA as! Matrix<Double>, matrixB as! Matrix<Double>) as? Matrix<Element>
+        case is DSPComplex.Type:
+            return Matrix<DSPComplex>.multiply(matrixA as! Matrix<DSPComplex>, matrixB as! Matrix<DSPComplex>) as? Matrix<Element>
+        case is DSPDoubleComplex.Type:
+            return Matrix<DSPDoubleComplex>.multiply(matrixA as! Matrix<DSPDoubleComplex>, matrixB as! Matrix<DSPDoubleComplex>) as? Matrix<Element>
+        case is Complex<Float>.Type:
+            return Matrix<Complex<Float>>.multiply(matrixA as! Matrix<Complex<Float>>, matrixB as! Matrix<Complex<Float>>) as? Matrix<Element>
+        case is Complex<Double>.Type:
+            return Matrix<Complex<Double>>.multiply(matrixA as! Matrix<Complex<Double>>, matrixB as! Matrix<Complex<Double>>) as? Matrix<Element>
+        default:
+            guard matrixA.columnCount == matrixB.rowCount else{
+                return nil
+            }
+            var array = [Element](repeating: .zero, count: matrixA.rowCount * matrixB.columnCount)
+            for i in 0..<matrixA.rowCount{
+                for j in 0..<matrixB.columnCount{
+                    for k in 0..<matrixA.columnCount{
+                        array[i * matrixB.columnCount + j] += matrixA.elements[i * matrixA.columnCount + k] * matrixB.elements[k * matrixB.columnCount + j]
+                    }
                 }
             }
+            return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
         }
-        return Self(elements: array, rowCount: matrixA.rowCount, columnCount: matrixB.columnCount)!
+    }
+    public static func multiply(_ matrixA: Matrix<Element>?, _ matrixB: Matrix<Element>?) -> Matrix<Element>?
+    where Element: Numeric
+    {
+        guard matrixA != nil && matrixB != nil else{
+            return nil
+        }
+        return multiply(matrixA!, matrixB!)
     }
 }
 

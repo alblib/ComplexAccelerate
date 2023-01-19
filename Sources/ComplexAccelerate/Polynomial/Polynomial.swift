@@ -821,10 +821,12 @@ extension Polynomial where Coefficient == Float{
     public func evaluate(withUnitComplexesOfPhases phases: [Float]) -> [DSPComplex]
     {
         let exponents: [Float] = vDSP.ramp(withInitialValue: 0, increment: 1, count: self.coefficients.count)
-        let exponentMatrix = Matrix<Float>(elements: exponents, rowCount: 1, columnCount: exponents.count)
-        let phaseMatrix = Matrix<Float>(elements: phases, rowCount: phases.count, columnCount: 1)
+        let exponentMatrix = Matrix<Float>(elements: exponents, rowCount: 1, columnCount: exponents.count)!
+        let phaseMatrix = Matrix<Float>(elements: phases, rowCount: phases.count, columnCount: 1)!
         let phaseRectangleMatrix = Matrix.multiply(phaseMatrix, exponentMatrix)!
-        let unitComplexMatrix = Matrix(elements: Vector<DSPComplex>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix!.rowCount, columnCount: phaseRectangleMatrix!.columnCount)!
+        let unitComplexMatrix = Matrix(elements: Vector<DSPComplex>.expi(phaseRectangleMatrix.elements), rowCount: phaseRectangleMatrix.rowCount, columnCount: phaseRectangleMatrix.columnCount)!
+        // TODO:
+        return []
     }
 }
 
