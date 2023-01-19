@@ -1,6 +1,14 @@
 import XCTest
 @testable import ComplexAccelerate
 
+struct Test{
+    var test: Complex<Double> = 1{
+        didSet{
+            print("didset")
+        }
+    }
+}
+
 final class ComplexAccelerateTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
@@ -38,5 +46,8 @@ final class ComplexAccelerateTests: XCTestCase {
         print(ScientificNumberFormatter().string(for: 2.0))
         print(Int64(+2).description)
         print(PolynomialFormatter().string(from: Polynomial(coefficients: [1,2,4])))
+        var a = Test()
+        a.test.real = 2
+        print(AudioPhase(inRadians: 0.00000001))
     }
 }

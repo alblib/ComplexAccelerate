@@ -35,6 +35,15 @@ public struct Matrix<Element>{
         return Array(elements[indexBase..<indexEnd])
     }
 }
+extension Matrix where Element: AdditiveArithmetic & ExpressibleByIntegerLiteral{
+    public static func identity(n: Int) -> Matrix{
+        var elements = Vector<Element>.zeros(count: n * n)
+        for i in 0..<n{
+            elements[i * (n+1)] = 1
+        }
+        return Matrix(elements: elements, rowCount: n, columnCount: n)!
+    }
+}
 
 
 extension Matrix: ExpressibleByArrayLiteral{
@@ -307,7 +316,9 @@ extension Matrix where Element == Complex<Double>{
 // MARK: - Matrix Multiplication
 
 extension Matrix where Element: Numeric{
-    public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>? {
+    public static func multiply(_ matrixA: Matrix<Element>, _ matrixB: Matrix<Element>) -> Matrix<Element>?
+    where Element: Numeric
+    {
         guard matrixA.columnCount == matrixB.rowCount else{
             return nil
         }
@@ -323,8 +334,8 @@ extension Matrix where Element: Numeric{
     }
 }
 
-public extension Matrix where Element == Float{
-    static func multiply(_ matrixA: Matrix<Float>, _ matrixB: Matrix<Float>) -> Matrix<Float>? {
+extension Matrix where Element == Float{
+    public static func multiply(_ matrixA: Matrix<Float>, _ matrixB: Matrix<Float>) -> Matrix<Float>? {
         guard matrixA.columnCount == matrixB.rowCount else{
             return nil
         }
