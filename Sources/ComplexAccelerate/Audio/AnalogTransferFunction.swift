@@ -69,6 +69,15 @@ extension AnalogTransferFunction{
         let RC = 1 / cutoffFrequency.inRadiansPerSecond
         return AnalogTransferFunction(sExpression: .init(numerator: Polynomial(coefficients: [0, RC]), denominator: Polynomial(coefficients: [1, RC])))
     }
+    public static func firstOrderShelvingFilter(centerFrequency: AudioFrequency, bassGain: AudioGain, trebleGain: AudioGain) -> AnalogTransferFunction
+    {
+        // H(s) = H(inf) * (s/(2pi fc) + sqrt(H(0)/H(inf))) / (s/(2pi fc) + sqrt(H(inf)/H(0)))
+        let sCoeff = 1 / centerFrequency.inRadiansPerSecond
+        let sqrtH0overHinf = sqrt(bassGain.byAmplitude / trebleGain.byAmplitude)
+        let numerator: Polynomial<Double> = [sqrtH0overHinf, sCoeff]
+        let denominator: Polynomial<Double> = [1 / sqrtH0overHinf, sCoeff]
+        return .init(sExpression: trebleGain.byAmplitude * numerator / denominator)
+    }
     public static func secondOrderLowPassFilter(cornerFrequency: AudioFrequency, dampingRatio zeta: Double) -> AnalogTransferFunction{
         let omega = cornerFrequency.inRadiansPerSecond
         let omega2 = omega * omega
