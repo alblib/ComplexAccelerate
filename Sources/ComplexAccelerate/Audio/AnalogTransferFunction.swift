@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// Defines a transfer function 𝐻(𝑠).
 public struct AnalogTransferFunction{
     public let sExpression: PolynomialFraction<Double>
     

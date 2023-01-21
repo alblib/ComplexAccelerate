@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// Defines a relative amplitude of audio, or a value of a transfer function, in various units.
 public struct AudioGain: ExpressibleByFloatLiteral{
     public let byAmplitude: Double
     public var byPower: Double{

@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// Defines a digital transfer function 𝐻(𝑧) with the given sample rate.
 public struct DigitalTransferFunction{
     
     public let zInverseExpression: PolynomialFraction<Double>

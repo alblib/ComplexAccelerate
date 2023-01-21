@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Formats a number with human-style math symbols.
 public class ScientificNumberFormatter: NumberFormatter{
     /// Indicates whether the thin space is used in proper places when ``isHumanStyle`` is true. In console, the thin space has no proper width, so this is false by default. Turn this on for labels.
     public var usesThinSpaces: Bool = false

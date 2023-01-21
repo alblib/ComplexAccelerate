@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// Represents a fraction of two polynomials, and thus defines the division operation.
 public struct PolynomialFraction<Coefficient>
 {
     public var numerator: Polynomial<Coefficient>

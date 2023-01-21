@@ -8,6 +8,7 @@
 import Foundation
 import Accelerate
 
+/// Defines other useful frequency response function derived from the transfer function itself.
 public protocol TransferFunction{
     func frequencyResponse(_ frequencies: [AudioFrequency]) -> [Complex<Double>]
     var bassGain: AudioGain { get }

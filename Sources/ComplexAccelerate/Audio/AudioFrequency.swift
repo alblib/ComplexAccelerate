@@ -8,7 +8,7 @@
 import Foundation
 import Accelerate
 
-
+/// Defines a structure containing frequency in hertz, and also defines conversions into other units and into log scale.
 public struct AudioFrequency: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral{
     public let inHertz: Double
     public var inOctave: Double{

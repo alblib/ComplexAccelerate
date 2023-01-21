@@ -6,6 +6,7 @@
 //
 
 import Foundation
+/// Prints a complex number in various styles.
 public class ComplexFormatter: Formatter{
     /// The system number formatter where most number printing style is defined.
     ///
