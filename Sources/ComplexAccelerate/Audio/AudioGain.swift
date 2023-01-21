@@ -26,10 +26,16 @@ public struct AudioGain: ExpressibleByFloatLiteral{
     public init(byAmplitude: Float) {
         self.byAmplitude = Double(abs(byAmplitude))
     }
+    public init(byAmplitude: Int) {
+        self.byAmplitude = Double(abs(byAmplitude))
+    }
     public init(byPower: Double){
         self.byAmplitude = sqrt(abs(byPower))
     }
     public init(byPower: Float){
+        self.byAmplitude = sqrt(Double(abs(byPower)))
+    }
+    public init(byPower: Int){
         self.byAmplitude = sqrt(Double(abs(byPower)))
     }
     public init(inDecibels: Double){

@@ -147,7 +147,11 @@ public class PolynomialFormatter{
     public func string<Coefficient>(from polynomialFraction: PolynomialFraction<Coefficient>) -> String
     where Coefficient: CustomStringConvertible & AdditiveArithmetic & BinaryFloatingPoint
     {
-        string(from: polynomialFraction.numerator, isBracketed: true) + " / "
-        + string(from: polynomialFraction.denominator, isBracketed: true)
+        if polynomialFraction.denominator == .one{
+            return string(from: polynomialFraction.numerator)
+        }else{
+            return string(from: polynomialFraction.numerator, isBracketed: true) + " / "
+            + string(from: polynomialFraction.denominator, isBracketed: true)
+        }
     }
 }

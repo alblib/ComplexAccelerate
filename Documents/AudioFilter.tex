@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{xurl, hyperref}
+\title{Audio Filters}
+\author{Woohyun \textsc{Rim}}
+\date{\today}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Analog Filter Units}
+\subsection{First-order Filters}
+\subsubsection{Shelving Filters}
+First-order shelving filters can be constructed by simply adding a bottom constant function and a low- or high-pass filter. \cite{first-order-shelving} 
+\begin{align}
+H(s) = A + B \frac{1}{s+\omega_0} \rightarrow C\frac{s+a}{s+b},
+\end{align}
+where $a$, $b$, and $C$ are positive.
+We want to express this transfer function into these three variables:
+\begin{itemize}
+\item gain at low frequency,
+\item gain at high frequency, and
+\item the center frequency (where the gain is the geometric average in amplitude sense or the arithmetic average in decibel sense of the lowest and the highest gains).
+\end{itemize}
+\par
+The gain at the low frequency is,
+\begin{align}
+\left.H(s)\right|_{s=2\pi i f, f\rightarrow 0} = \left.H(s)\right|_{s=0} = C\,\frac{a}{b}.
+\end{align}
+\par
+The gain at the low frequency is,
+\begin{align}
+\left.H(s)\right|_{s=2\pi i f, f\rightarrow \infty} = C.
+\end{align}
+\par
+The center frequency $f_c$ satisfies
+\begin{align}
+\left|H(s=2\pi i f_c)\right| = C\sqrt{\frac{a}{b}}.
+\end{align}
+The left side expands:
+\begin{align}
+\left|H(s=2\pi i f_c)\right| =C \sqrt{\frac{a^2+(2\pi f_c)^2}{b^2+(2\pi f_c)^2}}.
+\end{align}
+Thus, the condition for $f_c$ simplifies:
+\begin{align}
+&\sqrt{\frac{a}{b}}
+ = 
+ \sqrt{\frac{a^2+(2\pi f_c)^2}{b^2+(2\pi f_c)^2}}
+\\ \Rightarrow\quad&
+a(b^2+(2\pi f_c)^2) = b(a^2+(2\pi f_c)^2)
+\\ \Rightarrow\quad&
+(b-a)(2\pi f_c)^2 + ab(a-b) = 0
+\\ \stackrel{\text{unless $a=b$}}{\Rightarrow}\quad&
+(2\pi f_c)^2 = ab
+\end{align}
+
+\par\par
+To find the expression of the transfer function in terms of $H(0)$, $H(\infty)$, and $f_c$,
+let us find the expression of $a$, $b$, and $C$ in terms of those variables.
+\begin{align}
+&\frac{a}{b} = \frac{H(0)}{H(\infty)},\quad (2\pi f_c)^2 = ab
+\\ \Rightarrow\quad&
+a = (2\pi f_c)\sqrt{\frac{H(0)}{H(\infty)}},
+\quad
+b = (2\pi f_c)\sqrt{\frac{H(\infty)}{H(0)}};
+\\
+& C = H(\infty).
+\end{align}
+
+\par
+Thus, the transfer function in terms of meaningful parameters is written by
+\begin{align}
+H(s) = C\,\frac{s+a}{s+b} &= H(\infty) \frac{\frac{s}{2\pi f_c}+\sqrt{\frac{H(0)}{H(\infty)}}}{\frac{s}{2\pi f_c}+\sqrt{\frac{H(\infty)}{H(0)}}}
+\\&=\dfrac{s\sqrt{H(\infty)}+\omega_c\sqrt{H(0)}}{\dfrac{s}{\sqrt{H(\infty)}}+\dfrac{\omega_c}{\sqrt{H(0)}}},
+\end{align}
+where $\omega_c = 2\pi f_c$.
+
+\subsection{Second-order Filters}
+\subsubsection{Shelving Filters}
+The general second-order filter may be represented by
+\begin{align}
+H(s) = \frac{a s^2 + b s + c}{d s^2 + e s+ f}.
+\end{align}
+Here we will assume that the plot in log-log scale is rotational-symmetric.
+
+\begin{thebibliography}{100}
+\bibitem{first-order-shelving} \textit{Low and High Shelf Filters,} \url{https://ccrma.stanford.edu/~jos/fp/Low_High_Shelf_Filters.html}
+\bibitem{second-order-shelving} \textit{Shelving filter,} \url{https://www.recordingblogs.com/wiki/shelving-filter}
+\bibitem{analog-filter-design} Jonathan S. Abel and David P. Berners, \textit{Filter Design Using Second-Order Peaking and Shelving Sections,} \textit{Proceedings ICMC 2004} (2004) \url{http://hdl.handle.net/2027/spo.bbp2372.2004.152}
+\end{thebibliography}
+\end{document}
+
