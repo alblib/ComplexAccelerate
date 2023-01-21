@@ -10,6 +10,7 @@ import Accelerate
 
 /// Defines a transfer function 𝐻(𝑠).
 public struct AnalogTransferFunction{
+    /// The transfer function 𝐻(𝑠) in terms of 𝑠.
     public let sExpression: PolynomialFraction<Double>
     
     public init(sExpression: PolynomialFraction<Double>){
@@ -21,6 +22,7 @@ public struct AnalogTransferFunction{
     }
     
     public func bilinearTransformToDigital(sampleRate: AudioFrequency) -> DigitalTransferFunction{
+        // s = f(z)
         let zTransform = 2 * sampleRate.inHertz * PolynomialFraction(numerator: .init(coefficients: [1, -1]), denominator: .init(coefficients: [1, 1]))
         return DigitalTransferFunction(zInverseExpression: sExpression.substitute(variable: zTransform), sampleRate: sampleRate)
     }

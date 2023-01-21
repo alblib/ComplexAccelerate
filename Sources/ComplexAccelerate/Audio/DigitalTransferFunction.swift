@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  DigitalTransferFunction.swift
 //
 //
 //  Created by Albertus Liberius on 2022-12-27.
@@ -11,6 +11,7 @@ import Accelerate
 /// Defines a digital transfer function 𝐻(𝑧) with the given sample rate.
 public struct DigitalTransferFunction{
     
+    /// The digital transfer function 𝐻(𝑧) in terms of 𝑧⁻¹.
     public let zInverseExpression: PolynomialFraction<Double>
     public let sampleRate: AudioFrequency
     
@@ -25,6 +26,7 @@ public struct DigitalTransferFunction{
     
     
     public func bilinearTransformToAnalog() -> AnalogTransferFunction{
+        // z = f(s)
         let coeff: Double = 1 / (2 * self.sampleRate.inHertz)
         let sTransform = PolynomialFraction(numerator: .init(coefficients: [1, -coeff]), denominator: .init(coefficients: [1, coeff]))
         return AnalogTransferFunction(sExpression: zInverseExpression.substitute(variable: sTransform))
