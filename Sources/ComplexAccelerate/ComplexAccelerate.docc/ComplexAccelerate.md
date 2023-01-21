@@ -8,10 +8,27 @@ generic tree should be explained.
 
 ## Topics
 
-### Complex Analysis
+### Parallel Complex Analysis
 
 - ``Complex``
-
-### Parallel Operations
-
 - ``Vector``
+- ``Matrix``
+
+### Polynomials
+
+- ``Polynomial``
+- ``PolynomialFraction``
+
+### Audio DSP
+- ``AudioGain``
+- ``AudioPhase``
+- ``AudioFrequency``
+- ``TransferFunction``
+- ``AnalogTransferFunction``
+- ``DigitalTransferFunction``
+
+### Printing Style Formatter
+- ``StringSubstituter``
+- ``ScientificNumberFormatter``
+- ``ComplexFormatter``
+- ``PolynomialFormatter``
