@@ -121,4 +121,28 @@ extension AnalogTransferFunction{
     }
 }
 
-
+extension AnalogTransferFunction{
+    public static var weightK: AnalogTransferFunction{
+        // https://www.itu.int/dms_pubrec/itu-r/rec/bs/R-REC-BS.1770-0-200607-S!!PDF-E.pdf
+        AnalogTransferFunction(sExpression: [1.125945072697908e8, 18886.914378028894, 1.5848647011308556] / [1.125945072697908e8, 15004.846526655718, 1])
+    }
+    
+    //https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4331191/
+    public static var weightA: AnalogTransferFunction{
+        AnalogTransferFunction(
+            sExpression:
+                [0, 0, 0, 0, 1.3780221280022709e10]
+                / [3.08375028205341e20, 5.295693853630862e18, 2.6718101443475372e16,
+                   3.340095613379588e13, 6.728668228324725e9, 158808.43147552284, 1])
+    
+    }
+    
+    //https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4331191/
+    public static var weightC: AnalogTransferFunction{
+        AnalogTransferFunction(
+            sExpression:
+                [0, 0, 7.1587509876576e9]
+                / [9.8337567314626e13, 1.522146745441614e12, 5.910081257945861e9, 153495.90480450515, 1])
+    
+    }
+}

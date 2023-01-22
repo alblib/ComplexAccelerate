@@ -57,7 +57,7 @@ struct RelativePlotShape: Shape{
     let style: FillStyle
     let padding: CGFloat
     
-    func leftPaddingPoint(in rect: CGRect) -> CGPoint{ // not safe if relativePlotPoints is empty
+    private func leftPaddingPoint(in rect: CGRect) -> CGPoint{ // not safe if relativePlotPoints is empty
         let relativeLeftBorderX = -padding / (rect.maxX - rect.minX)
         let relativeDx = relativePlotPoints.first!.x - relativeLeftBorderX
         let relativeDyOverDx = relativePlotPoints.first?.dyOverDx.isNaN == false ? relativePlotPoints.first!.dyOverDx: 0
@@ -66,7 +66,7 @@ struct RelativePlotShape: Shape{
         return RelativePlotPoint(x: relativeLeftBorderX, y: relativeLeftBorderY).point(in: rect)
     }
     
-    func rightPaddingPoint(in rect: CGRect) -> CGPoint{ // not safe if relativePlotPoints is empty
+    private func rightPaddingPoint(in rect: CGRect) -> CGPoint{ // not safe if relativePlotPoints is empty
         let relativeRightBorderX = 1 + padding / (rect.maxX - rect.minX)
         let relativeDx = relativeRightBorderX - relativePlotPoints.last!.x
         let relativeDyOverDx = relativePlotPoints.last?.dyOverDx.isNaN == false ? relativePlotPoints.first!.dyOverDx: 0

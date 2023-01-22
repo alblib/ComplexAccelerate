@@ -2,6 +2,9 @@ import XCTest
 @testable import ComplexAccelerate
 import Accelerate
 
+func test() -> AnalogTransferFunction{
+    AnalogTransferFunction(sExpression: [1.125945072697908e8, 18886.914378028894, 1.5848647011308556] / [1.125945072697908e8, 15004.846526655718, 1])
+}
 
 final class ComplexAccelerateTests: XCTestCase {
     func testExample() throws {
@@ -23,5 +26,6 @@ final class ComplexAccelerateTests: XCTestCase {
        print("gains ", DigitalTransferFunction.LinearPhaseFIRFilter(frequencyResponse: {_ in AudioGain(byAmplitude: 1)}, sampleRate: 48000, sampleSize: 16)?.gainFrequencyResponse())
         print("filter ", DigitalTransferFunction.LinearPhaseFIRFilter(frequencyResponse: {_ in AudioGain(byAmplitude: 1)}, sampleRate: 48000, sampleSize: 16))
         print(DigitalTransferFunction.LinearPhaseFIRFilter(frequencyResponse: {_ in AudioGain(byAmplitude: 1)}, sampleRate: 48000, sampleSize: 16)?.phaseFrequencyResponse([0.1,0.2,0.3]))
+        print(test())
     }
 }
