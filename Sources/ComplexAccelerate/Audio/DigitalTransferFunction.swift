@@ -125,7 +125,7 @@ public extension DigitalTransferFunction{
         LinearPhaseFIRFilter(frequencyResponse: frequencyResponse, sampleRate: sampleRate, sampleSize: Int(ceil(sampleRate.inHertz * maxDelay * 2 + 1)))
     }
     static func LinearPhaseFIRFilter(frequencyResponse: ((AudioFrequency) -> AudioGain), sampleRate: AudioFrequency, demandedFrequencyResolutionInHertz: Double, maxDelay: TimeInterval) -> DigitalTransferFunction?
-    {
+    { // https://dsp.stackexchange.com/questions/31066/how-many-taps-does-an-fir-filter-need
         LinearPhaseFIRFilter(frequencyResponse: frequencyResponse, sampleRate: sampleRate, sampleSize: Int(ceil(max(sampleRate.inHertz / demandedFrequencyResolutionInHertz / 4, sampleRate.inHertz * maxDelay * 2 + 1))))
     }
 }
