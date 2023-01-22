@@ -69,9 +69,9 @@ struct RelativePlotShape: Shape{
     func rightPaddingPoint(in rect: CGRect) -> CGPoint{ // not safe if relativePlotPoints is empty
         let relativeRightBorderX = 1 + padding / (rect.maxX - rect.minX)
         let relativeDx = relativeRightBorderX - relativePlotPoints.last!.x
-        let relativeDyOverDx = relativePlotPoints.first?.dyOverDx.isNaN == false ? relativePlotPoints.first!.dyOverDx: 0
+        let relativeDyOverDx = relativePlotPoints.last?.dyOverDx.isNaN == false ? relativePlotPoints.first!.dyOverDx: 0
         let relativeDy = relativeDyOverDx * relativeDx
-        let relativeRightBorderY = relativePlotPoints.first!.y + relativeDy
+        let relativeRightBorderY = relativePlotPoints.last!.y + relativeDy
         return RelativePlotPoint(x: relativeRightBorderX, y: relativeRightBorderY).point(in: rect)
     }
     
@@ -244,6 +244,6 @@ public struct PlotView: View{
 
 struct PlotView_Previews: PreviewProvider {
     static var previews: some View {
-        PlotView(points: [.init(x: 0, y: 0), .init(x: 0.4, y: 0.4, dyOverDx: 2), .init(x: 1, y: 1)], xRange: 0...1, yRange: 0...1, fillStyle: .bottomFill)
+        PlotView(points: [.init(x: 0, y: 0), .init(x: 0.4, y: 0.4, dyOverDx: 2), .init(x: 1, y: 1)], xRange: 0...1, yRange: 0...1, fillStyle: .bottomFill).stroke(lineWidth: 100).strokeColor(.red)
     }
 }
