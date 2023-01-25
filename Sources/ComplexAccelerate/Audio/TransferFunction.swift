@@ -21,6 +21,7 @@ public protocol TransferFunction{
     func relativePhaseFrequencyResponse(in freqRange: ClosedRange<AudioFrequency>, count: Int) -> [AudioPhase]
     func continuousPhaseFrequencyResponse(in freqRange: ClosedRange<AudioFrequency>, count: Int) -> [AudioPhase]
     func continuousRelativePhaseFrequencyResponse(in freqRange: ClosedRange<AudioFrequency>, count: Int) -> [AudioPhase]
+    func groupDelay(in freqRange: ClosedRange<AudioFrequency>, count: Int) -> [TimeInterval]
 }
 extension TransferFunction{
     public func gainFrequencyResponse(_ frequencies: [AudioFrequency]) -> [AudioGain]{
@@ -50,5 +51,11 @@ extension TransferFunction{
     }
     public func continuousRelativePhaseFrequencyResponse(in freqRange: ClosedRange<AudioFrequency> = 20...20000, count: Int = 256) -> [AudioPhase]{
         Vector.convertToContinuousBranch(phaseVector: relativePhaseFrequencyResponse(in: freqRange, count: count))
+    }
+    public func groupDelay(in freqRange: ClosedRange<AudioFrequency> = 20...20000, count: Int = 256) -> [TimeInterval]
+    {
+        let argHs = Vector.radians(continuousPhaseFrequencyResponse(in: freqRange, count: count))
+        let twoPiF = Vector.angularVelocities(of: Vector.createFrequenciesLogScale(in: freqRange, count: count))
+        return vDSP.negative(vDSP.divide(argHs, twoPiF))
     }
 }

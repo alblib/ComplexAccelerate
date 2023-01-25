@@ -140,6 +140,12 @@ extension AudioFrequency: CustomStringConvertible{
     }
 }
 
+extension AudioFrequency: Hashable{
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.inHertz)
+    }
+}
+
 public extension AudioFrequency{
     static let sample_32kHz = AudioFrequency(inHertz: 32000)
     static let sample_44kHz = AudioFrequency(inHertz: 44100)

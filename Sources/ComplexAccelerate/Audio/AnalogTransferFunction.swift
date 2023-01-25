@@ -51,7 +51,7 @@ extension AnalogTransferFunction: TransferFunction{
         let A1 = sExpression.denominator.coefficient(order: 1)
         let B0 = sExpression.numerator.coefficient(order: 0)
         let B1 = sExpression.numerator.coefficient(order: 1)
-        return (B0 * A1 - B1 * A0) / (B0 * A0)
+        return A1 / A0 - B1 / B0
     }
     
     /// Calculates the values of the transfer function 𝐻(𝑠 = 2𝜋𝑖𝑓)) parallely for each tab.

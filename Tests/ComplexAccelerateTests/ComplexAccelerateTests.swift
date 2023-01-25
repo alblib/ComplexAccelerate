@@ -27,5 +27,13 @@ final class ComplexAccelerateTests: XCTestCase {
         print("filter ", DigitalTransferFunction.LinearPhaseFIRFilter(frequencyResponse: {_ in AudioGain(byAmplitude: 1)}, sampleRate: 48000, sampleSize: 16))
         print(DigitalTransferFunction.LinearPhaseFIRFilter(frequencyResponse: {_ in AudioGain(byAmplitude: 1)}, sampleRate: 48000, sampleSize: 16)?.phaseFrequencyResponse([0.1,0.2,0.3]))
         print(test())
+        print(AnalogTransferFunction.weightK.phaseFrequencyResponse())
+        print(AnalogTransferFunction.weightA.continuousPhaseFrequencyResponse())
+        print(AnalogTransferFunction.firstOrderLowPassFilter(cutoffFrequency: 1000).continuousPhaseFrequencyResponse())
+        print(AnalogTransferFunction.weightA.relativePhaseFrequencyResponse())
+        print(AnalogTransferFunction.weightA.bassGain)
+        print(AnalogTransferFunction.weightA)
+        
+        //PlotView(points: AnalogTransferFunction.weightK.phaseFrequencyResponse().enumerated().map{.init(x: Double($0.offset), y: $0.element.inDegrees)}, xRange: 0...255, yRange: -360...0)
     }
 }
