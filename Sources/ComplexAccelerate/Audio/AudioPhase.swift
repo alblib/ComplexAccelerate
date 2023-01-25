@@ -88,6 +88,7 @@ extension AudioPhase: CustomStringConvertible{
         let result = MeasurementFormatter()
         result.unitOptions = .providedUnit
         result.unitStyle = .short
+        result.numberFormatter.usesGroupingSeparator = false
         return result
     }()
     public var description: String{
