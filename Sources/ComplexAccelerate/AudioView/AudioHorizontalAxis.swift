@@ -7,6 +7,42 @@
 
 import Foundation
 import SwiftUI
+/*
+extension String {
+    func widthOfString(usingFont font: UIFont) -> CGFloat {
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = self.size(withAttributes: fontAttributes)
+        return size.width
+    }
+}
+*/
+
+/*
+// GitHub: zalogatomek
+// https://zalogatomek.medium.com/swiftui-missing-intrinsic-content-size-how-to-get-it-6eca8178a71f
+struct IntrinsicContentSizePreferenceKey: PreferenceKey {
+    static let defaultValue: CGSize = .zero
+
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}
+
+extension View {
+    func readIntrinsicContentSize(to size: Binding<CGSize>) -> some View {
+        background(GeometryReader { proxy in
+            Color.clear.preference(
+                key: IntrinsicContentSizePreferenceKey.self,
+                value: proxy.size
+            )
+        })
+        .onPreferenceChange(IntrinsicContentSizePreferenceKey.self) {
+            size.wrappedValue = $0
+        }
+    }
+}
+ 
+ */
 
 /// Auto-scaled 20-20kHz axis.
 struct AudioHorizontalAxis: View {
@@ -45,6 +81,10 @@ struct AudioHorizontalAxis: View {
             return [20, 35, 60, 100, 200, 350, 630, 1200, 2000, 3500, 6300, 12000, 20000]
         }
     }
+    
+    //@Environment(\.dynamicTypeSize) var dynamicTypeSize: DynamicTypeSize
+    //@State var lastLabelSize: CGSize = .zero
+    
     var body: some View {
         GeometryReader { geometry in
             RoundedRectangle(cornerRadius: lineWidth / 2)
@@ -61,6 +101,11 @@ struct AudioHorizontalAxis: View {
                     .position(x: label.inAudibleRangeLogScale * geometry.size.width, y: geometry.size.height / 2 + lineWidth * 1.5 + 10)
                     .foregroundColor(color)
             }
+            //Text("20k").font(.footnote).foregroundColor(.clear).readIntrinsicContentSize(to: $lastLabelSize)
+            //Text(rightNegativeMargin.description)
+            //Text(UIFont.preferredFont(forTextStyle: .footnote, compatibleWith: .current).pointSize.description)
+            //Text(UIFontMetrics.default.scaledValue(for: 10).description)
+            //DynamicTypeSize
         }
     }
 }
@@ -68,10 +113,10 @@ struct AudioHorizontalAxis: View {
 struct AudioHorizontalAxis_Previews: PreviewProvider {
     static var previews: some View{
         ZStack{
-            Color.red.frame(height: 40)
+            Color.red.frame(width: 382, height: 40)
             AudioHorizontalAxis()
+                .frame(width:360)
         }
-            .frame(width:360)
             .padding()
     }
 }
