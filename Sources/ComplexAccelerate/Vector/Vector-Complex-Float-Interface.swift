@@ -923,6 +923,23 @@ public extension Vector where Element == DSPComplex{
     }
 }
 
+// MARK: vForce Functions
+public extension Vector where Element == Complex<Float>{
+    static func reciprocal<U>(_ vector: U) -> [Complex<Float>]
+    where U: AccelerateBuffer, U.Element == Complex<Float>
+    {
+        _div(_conj(vector), squareMagnitudes(vector))
+    }
+}
+
+public extension Vector where Element == DSPComplex{
+    static func reciprocal<U>(_ vector: U) -> [DSPComplex]
+    where U: AccelerateBuffer, U.Element == DSPComplex
+    {
+        _div(_conj(vector), squareMagnitudes(vector))
+    }
+}
+
 // MARK: Trigonometric Functions
 
 public extension Vector where Element == Complex<Float>{

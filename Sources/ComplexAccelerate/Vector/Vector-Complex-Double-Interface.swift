@@ -923,6 +923,23 @@ public extension Vector where Element == DSPDoubleComplex{
     }
 }
 
+// MARK: vForce Functions
+public extension Vector where Element == Complex<Double>{
+    static func reciprocal<U>(_ vector: U) -> [Complex<Double>]
+    where U: AccelerateBuffer, U.Element == Complex<Double>
+    {
+        _div(_conj(vector), squareMagnitudes(vector))
+    }
+}
+
+public extension Vector where Element == DSPDoubleComplex{
+    static func reciprocal<U>(_ vector: U) -> [DSPDoubleComplex]
+    where U: AccelerateBuffer, U.Element == DSPDoubleComplex
+    {
+        _div(_conj(vector), squareMagnitudes(vector))
+    }
+}
+
 // MARK: Trigonometric Functions
 
 public extension Vector where Element == Complex<Double>{

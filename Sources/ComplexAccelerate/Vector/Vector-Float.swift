@@ -276,6 +276,21 @@ public extension Vector where Element == Float{
         vForce.exp(vDSP.multiply(exponent, vForce.log(bases)))
     }
     
+    static func reciprocal<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.reciprocal(vector)
+    }
+    
+    static func sqrt<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.sqrt(vector)
+    }
+    
+    static func rsqrt<VectorA>(_ vector: VectorA) -> [Float]
+    where VectorA: AccelerateBuffer, VectorA.Element == Element{
+        vForce.rsqrt(vector)
+    }
+    
     // MARK: - Trigonometric Functions
     
     @inlinable
@@ -377,5 +392,4 @@ public extension Vector where Element == Float{
     where VectorA: AccelerateBuffer, VectorA.Element == Element{
         vForce.atanh(vDSP.divide(1, vector))
     }
-    
 }
